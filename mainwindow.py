@@ -5,6 +5,7 @@ from mainwindow_ui import Ui_MainWindow
 from PySide.QtGui import *
 
 from pluginloader import PluginLoader
+from canvas import Canvas
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -12,6 +13,9 @@ class MainWindow(QMainWindow):
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
+        self.canvas = Canvas()
+        self.setCentralWidget(self.canvas)
 
         loader = PluginLoader()
         loader.load('plugins')

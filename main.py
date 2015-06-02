@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 __author__ = 'ipetrash'
 
 from PySide.QtGui import *
@@ -21,5 +24,9 @@ if __name__ == '__main__':
 
     mw = MainWindow()
     mw.show()
+
+    # from canvas import Canvas
+    # c = Canvas()
+    # c.show()
 
     sys.exit(app.exec_())
