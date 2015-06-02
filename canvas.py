@@ -25,11 +25,11 @@ class Canvas(QWidget):
 
         super().mouseMoveEvent(event)
 
-    def mousePressEvent(self, *args, **kwargs):
+    def mousePressEvent(self, event):
         print('press')
         self.pressed = True
 
-        super().mousePressEvent(*args, **kwargs)
+        super().mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):
         self.pressed = False
