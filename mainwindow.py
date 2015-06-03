@@ -16,7 +16,8 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
 
         self.canvas = Canvas()
-        self.setCentralWidget(self.canvas)
+        # self.setCentralWidget(self.canvas)
+        self.ui.scrollArea.setWidget(self.canvas)
 
         loader = PluginLoader()
         loader.load('plugins')
