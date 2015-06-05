@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# This file is part of fake-painter, by Ilya Petrash
+# and is licensed under the MIT license, under the terms listed within
+# LICENSE which is included with the source of this package
+
 __author__ = 'ipetrash'
 
-from abstract_instrument import AbstractInstrument
+from abstractinstrument import AbstractInstrument
 from PySide.QtCore import Qt
 from PySide.QtGui import *
 
@@ -38,7 +42,7 @@ class PencilInstrument(AbstractInstrument):
 
             canvas.setIsPaint(False)
 
-    def paint(self, canvas, isSecondaryColor = False, additionalFlag = False):
+    def paint(self, canvas, isSecondaryColor=False, additionalFlag=False):
         painter = QPainter(canvas.getImage())
         pen = QPen()
         # TODO: брать найстройки из класса-синглетона

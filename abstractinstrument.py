@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# This file is part of fake-painter, by Ilya Petrash
+# and is licensed under the MIT license, under the terms listed within
+# LICENSE which is included with the source of this package
+
 __author__ = 'ipetrash'
 
 from abc import *
+from undocommand import UndoCommand
 
 
 class AbstractInstrument(metaclass=ABCMeta):
@@ -34,6 +39,4 @@ class AbstractInstrument(metaclass=ABCMeta):
         Base realisation simply save all image to UndoStack
         """
 
-        # TODO: передавать только canvas
-        # TODO: раскомментировать
-        # canvas.pushUndoCommand(UndoCommand(canvas.getImage(), canvas))
+        canvas.pushUndoCommand(UndoCommand(canvas))

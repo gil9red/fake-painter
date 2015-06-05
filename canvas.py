@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# This file is part of fake-painter, by Ilya Petrash
+# and is licensed under the MIT license, under the terms listed within
+# LICENSE which is included with the source of this package
+
 __author__ = 'ipetrash'
 
 
@@ -24,13 +28,17 @@ class Canvas(QWidget):
         self.mPixmap = None
         self.mCurrentCursor = None
         self.mZoomFactor = 1.0
-        self.mUndoStack = QUndoStack()
+
+        self.mUndoStack = QUndoStack(self)
+        # TODO: брать из синглетона-настроек
+        # mUndoStack->setUndoLimit(DataSingleton::Instance()->getHistoryDepth());
+
         self.mInstrumentHandler = None
 
         self.setMouseTracking(True)
 
         # TODO: ай-ай-ай
-        from pencil_instrument import PencilInstrument
+        from pencilinstrument import PencilInstrument
         self.mInstrumentHandler = PencilInstrument()
         self.image = QImage(400, 400, QImage.Format_ARGB32_Premultiplied)
         self.image.fill(Qt.transparent)
@@ -106,7 +114,7 @@ class Canvas(QWidget):
         pass
 
     def getUndoStack(self):
-        pass
+        return self.mUndoStack
 
     def setIsPaint(self, isPaint):
         self.mIsPaint = isPaint
@@ -142,7 +150,8 @@ class Canvas(QWidget):
         pass
 
     def pushUndoCommand(self, command):
-        pass
+        if command:
+            self.mUndoStack.push(command)
 
     def initializeImage(self):
         pass
@@ -229,7 +238,8 @@ class Canvas(QWidget):
         self.mInstrumentHandler.mouseMoveEvent(event, self)
 
         super().mouseMoveEvent(event)
-    #
+
+    # TODO: canvas.mouseReleaseEvent не реализован
     # def mouseReleaseEvent(self, event):
     # if(mIsResize)
     # {
@@ -263,84 +273,3 @@ class Canvas(QWidget):
         painter.end()
 
         super().paintEvent(event)
-
-
-
-
-
-
-
-
-
-# class Canvas(QWidget):
-#     def __init__(self):
-#         super().__init__()
-#
-#         self.pressed = False
-#         # self.image = None
-#         self.image = QImage(400, 400, QImage.Format_ARGB32)
-#         self.image.fill(Qt.transparent)
-#
-#         self.last_point = None
-#
-#         # self.commands = []
-#
-#     # def resizeEvent(self, event):
-#     #     if self.image:
-#     #         self.image = self.image.copy(0, 0, event.size().width(), event.size().height())
-#     #     else:
-#     #         self.image = QImage(event.size(), QImage.Format_ARGB32)
-#     #         self.image.fill(Qt.transparent)
-#     #
-#     #     super().resizeEvent(event)
-#
-#     def mouseMoveEvent(self, event):
-#         if self.pressed:
-#             x = event.pos().x()
-#             y = event.pos().y()
-#
-#             p = QPainter(self.image)
-#             p.setRenderHint(QPainter.Antialiasing)
-#             p.setPen(QPen(Qt.black, 3.0))
-#
-#             p.drawLine(QPoint(x, y), QPoint(self.last_point[0], self.last_point[1]))
-#
-#             self.last_point = x, y
-#
-#             # p.drawPoint(x, y)
-#
-#             # p.drawPoints(
-#             #     [QPoint(x, y),
-#             #      QPoint(x + 1, y),
-#             #      QPoint(x - 1, y),
-#             #      QPoint(x, y + 1),
-#             #      QPoint(x, y - 1)]
-#             # )
-#
-#             self.update()
-#
-#         super().mouseMoveEvent(event)
-#
-#     def mousePressEvent(self, event):
-#         self.pressed = True
-#         self.last_point = event.pos().x(), event.pos().y()
-#
-#         super().mousePressEvent(event)
-#
-#     def mouseReleaseEvent(self, event):
-#         self.pressed = False
-#
-#         super().mouseReleaseEvent(event)
-#
-#     def paintEvent(self, event):
-#         p = QPainter(self)
-#         p.setRenderHint(QPainter.Antialiasing)
-#
-#         p.setBrush(Qt.gray)
-#         p.drawRect(self.rect())
-#
-#         p.setBrush(Qt.white)
-#         p.drawRect(self.image.rect())
-#         p.drawImage(0, 0, self.image)
-#
-#         super().paintEvent(event)

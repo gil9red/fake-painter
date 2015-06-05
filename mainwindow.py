@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# This file is part of fake-painter, by Ilya Petrash
+# and is licensed under the MIT license, under the terms listed within
+# LICENSE which is included with the source of this package
+
 from mainwindow_ui import Ui_MainWindow
 from PySide.QtGui import *
 from PySide.QtCore import *
 
 from pluginloader import PluginLoader
 from canvas import Canvas
+
 
 class MainWindow(QMainWindow, QObject):
     def __init__(self, parent=None):
@@ -19,10 +24,30 @@ class MainWindow(QMainWindow, QObject):
         # self.setCentralWidget(self.canvas)
         self.ui.scrollArea.setWidget(self.canvas)
 
+        self.mUndoStackGroup = QUndoGroup(self)
+        self.mUndoStackGroup.addStack(self.canvas.getUndoStack())
+        self.mUndoStackGroup.setActiveStack(self.canvas.getUndoStack())
+
+        self.mUndoStackGroup.canUndoChanged.connect(self.canUndoChanged)
+        self.mUndoStackGroup.canRedoChanged.connect(self.canRedoChanged)
+
+        self.canUndoChanged(self.mUndoStackGroup.canUndo())
+        self.canRedoChanged(self.mUndoStackGroup.canRedo())
+
+        self.ui.actionUndo.triggered.connect(self.mUndoStackGroup.undo)
+        self.ui.actionRedo.triggered.connect(self.mUndoStackGroup.redo)
+
+
         loader = PluginLoader()
         loader.load('plugins')
 
         self.read_settings()
+
+    def canUndoChanged(self, enabled):
+        self.ui.actionUndo.setEnabled(enabled)
+
+    def canRedoChanged(self, enabled):
+        self.ui.actionRedo.setEnabled(enabled)
 
     def read_settings(self):
         ini = QSettings('settings.ini')

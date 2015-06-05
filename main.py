@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# This file is part of fake-painter, by Ilya Petrash
+# and is licensed under the MIT license, under the terms listed within
+# LICENSE which is included with the source of this package
+
 __author__ = 'ipetrash'
 
 from PySide.QtGui import *
@@ -17,16 +21,17 @@ import sys
 # b = Singleton()
 # print(a is b)
 
+# TODO: генерация формы / файла ресурсов
+# pyside-uic -o widget.py widget.ui
+# pyside-rcc -o resource_rc.py resource.qrc
+
 from mainwindow import MainWindow
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
 
     mw = MainWindow()
     mw.show()
-
-    # from canvas import Canvas
-    # c = Canvas()
-    # c.show()
 
     sys.exit(app.exec_())
