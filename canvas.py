@@ -43,6 +43,9 @@ class Canvas(QWidget):
         self.image = QImage(400, 400, QImage.Format_ARGB32_Premultiplied)
         self.image.fill(Qt.transparent)
 
+        self.resize(self.image.rect().right() + 6,
+                    self.image.rect().bottom() + 6)
+
     # Send primary color for ToolBar.
     sendPrimaryColorView = Signal()
 
@@ -77,7 +80,7 @@ class Canvas(QWidget):
     def resizeImage(self):
         pass
 
-    def resizeImage(self):
+    def resizeCanvas(self):
         pass
 
     def rotateImage(self, flag):
@@ -224,8 +227,28 @@ class Canvas(QWidget):
         #     mInstrumentHandler->mouseMoveEvent(event, *this);
         # }
 
+        if self.mIsResize:
+            width = event.pos().x()
+            height = event.pos().y()
+
+            if width > 1 or height > 1:
+                tempImage = QImage(width, height, QImage.Format_ARGB32_Premultiplied)
+                painter = QPainter(tempImage)
+                painter.setPen(Qt.NoPen)
+                # painter.setBrush(Qt.white)
+                painter.setBrush(QBrush(QPixmap("transparent.jpg")))
+                painter.drawRect(QRect(0, 0, width, height))
+                painter.drawImage(0, 0, self.getImage())
+                painter.end()
+
+                self.setImage(tempImage)
+                self.resize(self.getImage().rect().right() + 6,
+                            self.getImage().rect().bottom() + 6)
+                self.setEdited(True)
+                self.clearSelection()
+
         # TODO: проверка дублирует ту, что в mousePressEvent
-        if event.pos().x() < self.image.rect().right() + 6 and \
+        elif event.pos().x() < self.image.rect().right() + 6 and \
                 event.pos().x() > self.image.rect().right() and \
                 event.pos().y() > self.image.rect().bottom() and \
                 event.pos().y() < self.image.rect().bottom() + 6:
@@ -240,22 +263,24 @@ class Canvas(QWidget):
         super().mouseMoveEvent(event)
 
     # TODO: canvas.mouseReleaseEvent не реализован
-    # def mouseReleaseEvent(self, event):
-    # if(mIsResize)
-    # {
-    #    mIsResize = false;
-    #    restoreCursor();
-    # }
-    # else if(DataSingleton::Instance()->getInstrument() != NONE_INSTRUMENT)
-    # {
-    #     mInstrumentHandler = mInstrumentsHandlers.at(DataSingleton::Instance()->getInstrument());
-    #     mInstrumentHandler->mouseReleaseEvent(event, *this);
-    # }
-    #
-    #     super().mouseReleaseEvent(event)
+    def mouseReleaseEvent(self, event):
+        if self.mIsResize:
+           self.mIsResize = False
+           self.restoreCursor()
+        # TODO: реализация взятия инструмента из синглетона
+        # elif (DataSingleton::Instance()->getInstrument() != NONE_INSTRUMENT)
+        # {
+        #     mInstrumentHandler = mInstrumentsHandlers.at(DataSingleton::Instance()->getInstrument());
+        #     mInstrumentHandler->mouseReleaseEvent(event, *this);
+        # }
+        else:
+            self.mInstrumentHandler.mouseReleaseEvent(event, self)
+
+        super().mouseReleaseEvent(event)
 
     def paintEvent(self, event):
         painter = QPainter(self)
+        painter.setPen(Qt.NoPen)
 
         # TODO: рисуем шахматную доску
         # TODO: иконки через ресурсы брать
@@ -266,7 +291,6 @@ class Canvas(QWidget):
 
         painter.drawImage(event.rect(), self.image, event.rect())
 
-        painter.setPen(Qt.NoPen)
         painter.setBrush(Qt.black)
         painter.drawRect(QRect(self.image.rect().right(), self.image.rect().bottom(), 6, 6))
 

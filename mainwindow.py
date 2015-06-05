@@ -22,7 +22,16 @@ class MainWindow(QMainWindow, QObject):
 
         self.canvas = Canvas()
         # self.setCentralWidget(self.canvas)
-        self.ui.scrollArea.setWidget(self.canvas)
+
+        scrollArea = QScrollArea()
+        scrollArea.setWidget(self.canvas)
+        # scrollArea.setWidgetResizable(True)
+        scrollArea.setBackgroundRole(QPalette.Dark)
+
+        self.ui.tabWidget.addTab(scrollArea, "untitled")
+
+        # self.ui.scrollArea.setWidget(self.canvas)
+        # self.ui.scrollArea.setBackgroundRole(QPalette.Dark)
 
         self.mUndoStackGroup = QUndoGroup(self)
         self.mUndoStackGroup.addStack(self.canvas.getUndoStack())
