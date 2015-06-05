@@ -46,14 +46,61 @@ class MainWindow(QMainWindow, QObject):
         self.ui.actionUndo.triggered.connect(self.mUndoStackGroup.undo)
         self.ui.actionRedo.triggered.connect(self.mUndoStackGroup.redo)
 
+        # self.ui.actionSave.triggered.connect(self.save)
+        self.ui.actionSaveAs.triggered.connect(self.save_as)
+
+        self.ui.actionOpen.triggered.connect(self.open)
+
+        # TODO: Добавить в виде плагина
+        # self.ui.actionPrint
 
         loader = PluginLoader()
         loader.load('plugins')
 
         self.read_settings()
 
+    # def save(self):
+    #     print(self.currentCanvas())
+
+    def save_as(self):
+        # Список строк с поддерживаемыми форматами изображений
+        formats = [str(x) for x in QImageWriter.supportedImageFormats()]
+
+        # Описываем как фильтры диалога
+        filters = ["{} ( *.{} )".format(x.upper(), x) for x in formats]
+
+        # Получим путь к файлу
+        file_name = QFileDialog.getSaveFileName(self, None, None, '\n'.join(filters))[0]
+        if file_name:
+            try:
+                self.currentCanvas().save(file_name)
+            except Exception as e:
+                QMessageBox.warning(self, 'Внимание', str(e))
+
+    def open(self):
+        # Список строк с поддерживаемыми форматами изображений
+        formats = [str(x) for x in QImageReader.supportedImageFormats()]
+
+        # Описываем как фильтры диалога
+        filters = 'Поддерживаемые форматы ('
+        filters += ' '.join(["*.{}".format(x.lower()) for x in formats])
+        filters += ')'
+
+        # Получим путь к файлу
+        file_name = QFileDialog.getOpenFileName(self, None, None, filters)[0]
+        if file_name:
+            try:
+                self.currentCanvas().load(file_name)
+            except Exception as e:
+                QMessageBox.warning(self, 'Внимание', str(e))
+
     def canUndoChanged(self, enabled):
         self.ui.actionUndo.setEnabled(enabled)
+
+    def currentCanvas(self):
+        if self.ui.tabWidget.currentWidget():
+            scroll_area = self.ui.tabWidget.currentWidget()
+            return scroll_area.widget()
 
     def canRedoChanged(self, enabled):
         self.ui.actionRedo.setEnabled(enabled)

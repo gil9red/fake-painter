@@ -68,14 +68,28 @@ class Canvas(QWidget):
     # Send signal to selection instrument.
     sendEnableSelectionInstrument = Signal()
 
-    def save(self):
-        pass
+    def save(self, file_name):
+        # Если не удалось сохранить
+        if not self.getImage().save(file_name):
+            raise Exception('Не удалось сохранить в "{}"'.format(file_name))
 
-    def saveAs(self):
-        pass
+    def load(self, file_name):
+        im = QImage()
 
-    def print(self):
-        pass
+        # Если не удалось сохранить
+        if not im.load(file_name):
+            raise Exception('Не удалось загрузить из "{}"'.format(file_name))
+
+        self.setImage(im)
+
+    # def save(self):
+    #     pass
+    #
+    # def saveAs(self):
+    #     pass
+    #
+    # def print(self):
+    #     pass
 
     def resizeImage(self):
         pass
@@ -94,6 +108,7 @@ class Canvas(QWidget):
 
     def setImage(self, im):
         self.image = im
+        self.update()
 
     def setEdited(self, flag):
         pass
@@ -174,12 +189,11 @@ class Canvas(QWidget):
     def autoSave(self):
         pass
 
+    def rect_bottom_right_corner(self):
+        return QRect(self.image.rect().right(), self.image.rect().bottom(), 6, 6)
+
     def mousePressEvent(self, event):
-        if event.buttons() == Qt.LeftButton and \
-                event.pos().x() < self.image.rect().right() + 6 and \
-                event.pos().x() > self.image.rect().right() and \
-                event.pos().y() > self.image.rect().bottom() and \
-                event.pos().y() < self.image.rect().bottom() + 6:
+        if event.buttons() == Qt.LeftButton and self.rect_bottom_right_corner().contains(event.pos()):
             self.mIsResize = True
             self.setCursor(Qt.SizeFDiagCursor)
 
@@ -246,12 +260,7 @@ class Canvas(QWidget):
                             self.getImage().rect().bottom() + 6)
                 self.setEdited(True)
                 self.clearSelection()
-
-        # TODO: проверка дублирует ту, что в mousePressEvent
-        elif event.pos().x() < self.image.rect().right() + 6 and \
-                event.pos().x() > self.image.rect().right() and \
-                event.pos().y() > self.image.rect().bottom() and \
-                event.pos().y() < self.image.rect().bottom() + 6:
+        elif self.rect_bottom_right_corner().contains(event.pos()):
             self.setCursor(Qt.SizeFDiagCursor)
         else:
             # TODO: курсор должен зависить от текущего инструмента
@@ -292,7 +301,7 @@ class Canvas(QWidget):
         painter.drawImage(event.rect(), self.image, event.rect())
 
         painter.setBrush(Qt.black)
-        painter.drawRect(QRect(self.image.rect().right(), self.image.rect().bottom(), 6, 6))
+        painter.drawRect(self.rect_bottom_right_corner())
 
         painter.end()
 
