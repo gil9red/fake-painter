@@ -20,21 +20,8 @@ class MainWindow(QMainWindow, QObject):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.canvas = Canvas()
-        # self.setCentralWidget(self.canvas)
-
-        scrollArea = QScrollArea()
-        scrollArea.setWidget(self.canvas)
-        # scrollArea.setWidgetResizable(True)
-        scrollArea.setBackgroundRole(QPalette.Dark)
-
-        self.ui.tabWidget.addTab(scrollArea, "untitled")
-
-        # self.ui.scrollArea.setWidget(self.canvas)
-        # self.ui.scrollArea.setBackgroundRole(QPalette.Dark)
-
         self.mUndoStackGroup = QUndoGroup(self)
-        self.mUndoStackGroup.addStack(self.canvas.getUndoStack())
+
         self.mUndoStackGroup.setActiveStack(self.canvas.getUndoStack())
 
         self.mUndoStackGroup.canUndoChanged.connect(self.canUndoChanged)
@@ -48,16 +35,81 @@ class MainWindow(QMainWindow, QObject):
 
         # self.ui.actionSave.triggered.connect(self.save)
         self.ui.actionSaveAs.triggered.connect(self.save_as)
-
+        self.ui.actionNew.triggered.connect(self.new_tab)
         self.ui.actionOpen.triggered.connect(self.open)
 
         # TODO: Добавить в виде плагина
         # self.ui.actionPrint
 
+        self.ui.tabWidget.currentChanged.connect(self.activate_tab)
+        # TODO: сделать, в оригинальном коде называлось enableActions
+        # self.ui.tabWidget.currentChanged.connect(self.update_states)
+        self.ui.tabWidget.tabCloseRequested.connect(self.close_tab)
+
         loader = PluginLoader()
         loader.load('plugins')
 
         self.read_settings()
+
+# void MainWindow::closeTab(int index)
+# {
+#     ImageArea *ia = getImageAreaByIndex(index);
+#     if(ia->getEdited())
+#     {
+#         int ans = QMessageBox::warning(this, tr("Closing Tab..."),
+#                                        tr("File has been modified\nDo you want to save changes?"),
+#                                        QMessageBox::Yes | QMessageBox::Default,
+#                                        QMessageBox::No, QMessageBox::Cancel | QMessageBox::Escape);
+#         switch(ans)
+#         {
+#         case QMessageBox::Yes:
+#             ia->save();
+#             break;
+#         case QMessageBox::Cancel:
+#             return;
+#         }
+#     }
+#     mUndoStackGroup->removeStack(ia->getUndoStack()); //for safety
+#     QWidget *wid = mTabWidget->widget(index);
+#     mTabWidget->removeTab(index);
+#     delete wid;
+#     if (mTabWidget->count() == 0)
+#     {
+#         setWindowTitle("Empty - EasyPaint");
+#     }
+# }
+
+    def new_tab(self):
+        canvas = Canvas()
+        self.mUndoStackGroup.addStack(canvas.getUndoStack())
+
+        scroll_area = QScrollArea()
+        scroll_area.setWidget(canvas)
+        scroll_area.setBackgroundRole(QPalette.Dark)
+
+        self.ui.tabWidget.addTab(scroll_area, "untitled")
+
+    def activate_tab(self, index):
+        if index == -1:
+            return
+
+        # TODO: проверить, мне кажется при этом слоте так и так
+        # вкладка Index будет текущей
+        self.ui.tabWidget.setCurrentIndex(index)
+
+        # TODO: реализовать
+        # QSize size = getCurrentImageArea()->getImage()->size();
+        # mSizeLabel->setText(QString("%1 x %2").arg(size.width()).arg(size.height()));
+
+        canvas = self.currentCanvas()
+
+        if not canvas.getFileName():
+            self.setWindowTitle(canvas.getFileName() + " - fake-painter")
+        else:
+            self.setWindowTitle("Untitled Image" + " - EasyPaint")
+
+        self.mUndoStackGroup.setActiveStack(canvas.getUndoStack())
+
 
     # def save(self):
     #     print(self.currentCanvas())

@@ -42,7 +42,7 @@ class PencilInstrument(AbstractInstrument):
 
             canvas.setIsPaint(False)
 
-    def paint(self, canvas, isSecondaryColor=False, additionalFlag=False):
+    def paint(self, canvas, is_secondary_color=False, additional_flag=False):
         painter = QPainter(canvas.getImage())
         pen = QPen()
         # TODO: брать найстройки из класса-синглетона
@@ -52,7 +52,7 @@ class PencilInstrument(AbstractInstrument):
         pen.setCapStyle(Qt.RoundCap)
         pen.setJoinStyle(Qt.RoundJoin)
 
-        if isSecondaryColor:
+        if is_secondary_color:
             # pen.setBrush(DataSingleton::Instance()->getSecondaryColor())
             pen.setBrush(Qt.white)
         else:

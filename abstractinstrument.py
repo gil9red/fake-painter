@@ -30,7 +30,7 @@ class AbstractInstrument(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def paint(self, canvas, isSecondaryColor = False, additionalFlag = False):
+    def paint(self, canvas, is_secondary_color=False, additional_flag=False):
         pass
 
     def makeUndoCommand(self, canvas):

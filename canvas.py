@@ -10,6 +10,7 @@ __author__ = 'ipetrash'
 
 from PySide.QtGui import *
 from PySide.QtCore import *
+import os.path
 
 
 class Canvas(QWidget):
@@ -74,6 +75,7 @@ class Canvas(QWidget):
             raise Exception('Не удалось сохранить в "{}"'.format(file_name))
 
     def load(self, file_name):
+        self.filePath = file_name
         im = QImage()
 
         # Если не удалось сохранить
@@ -101,7 +103,7 @@ class Canvas(QWidget):
         pass
 
     def getFileName(self):
-        pass
+        return os.path.basename(self.filePath)
 
     def getImage(self):
         return self.image
