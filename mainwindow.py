@@ -8,7 +8,7 @@ from PySide.QtCore import *
 from pluginloader import PluginLoader
 from canvas import Canvas
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow, QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
 
