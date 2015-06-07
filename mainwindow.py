@@ -22,8 +22,6 @@ class MainWindow(QMainWindow, QObject):
 
         self.mUndoStackGroup = QUndoGroup(self)
 
-        self.mUndoStackGroup.setActiveStack(self.canvas.getUndoStack())
-
         self.mUndoStackGroup.canUndoChanged.connect(self.canUndoChanged)
         self.mUndoStackGroup.canRedoChanged.connect(self.canRedoChanged)
 
@@ -50,6 +48,11 @@ class MainWindow(QMainWindow, QObject):
         loader.load('plugins')
 
         self.read_settings()
+
+        self.new_tab()
+
+    def close_tab(self, index):
+        pass
 
 # void MainWindow::closeTab(int index)
 # {
@@ -90,6 +93,8 @@ class MainWindow(QMainWindow, QObject):
         self.ui.tabWidget.addTab(scroll_area, "untitled")
 
     def activate_tab(self, index):
+        print('activate_tab: ' + str(index))
+
         if index == -1:
             return
 
@@ -101,12 +106,12 @@ class MainWindow(QMainWindow, QObject):
         # QSize size = getCurrentImageArea()->getImage()->size();
         # mSizeLabel->setText(QString("%1 x %2").arg(size.width()).arg(size.height()));
 
-        canvas = self.currentCanvas()
+        canvas = self.get_current_canvas()
 
-        if not canvas.getFileName():
+        if canvas.getFileName():
             self.setWindowTitle(canvas.getFileName() + " - fake-painter")
         else:
-            self.setWindowTitle("Untitled Image" + " - EasyPaint")
+            self.setWindowTitle("Untitled Image" + " - fake-painter")
 
         self.mUndoStackGroup.setActiveStack(canvas.getUndoStack())
 
@@ -125,7 +130,7 @@ class MainWindow(QMainWindow, QObject):
         file_name = QFileDialog.getSaveFileName(self, None, None, '\n'.join(filters))[0]
         if file_name:
             try:
-                self.currentCanvas().save(file_name)
+                self.get_current_canvas().save(file_name)
             except Exception as e:
                 QMessageBox.warning(self, 'Внимание', str(e))
 
@@ -142,17 +147,24 @@ class MainWindow(QMainWindow, QObject):
         file_name = QFileDialog.getOpenFileName(self, None, None, filters)[0]
         if file_name:
             try:
-                self.currentCanvas().load(file_name)
+                self.get_current_canvas().load(file_name)
             except Exception as e:
                 QMessageBox.warning(self, 'Внимание', str(e))
 
     def canUndoChanged(self, enabled):
         self.ui.actionUndo.setEnabled(enabled)
 
-    def currentCanvas(self):
-        if self.ui.tabWidget.currentWidget():
-            scroll_area = self.ui.tabWidget.currentWidget()
-            return scroll_area.widget()
+    def get_canvas(self, index):
+        if index < 0 or index >= self.ui.tabWidget.count():
+            return None
+
+        tab = self.ui.tabWidget.widget(index)
+        return tab.widget()
+
+    def get_current_canvas(self):
+        index = self.ui.tabWidget.currentIndex()
+        if index != -1:
+            return self.get_canvas(index)
 
     def canRedoChanged(self, enabled):
         self.ui.actionRedo.setEnabled(enabled)

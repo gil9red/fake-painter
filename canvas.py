@@ -103,7 +103,8 @@ class Canvas(QWidget):
         pass
 
     def getFileName(self):
-        return os.path.basename(self.filePath)
+        if self.filePath:
+            return os.path.basename(self.filePath)
 
     def getImage(self):
         return self.image
