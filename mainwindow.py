@@ -40,47 +40,51 @@ class MainWindow(QMainWindow, QObject):
         # self.ui.actionPrint
 
         self.ui.tabWidget.currentChanged.connect(self.activate_tab)
-        # TODO: сделать, в оригинальном коде называлось enableActions
-        # self.ui.tabWidget.currentChanged.connect(self.update_states)
         self.ui.tabWidget.tabCloseRequested.connect(self.close_tab)
 
-        loader = PluginLoader()
-        loader.load('plugins')
+        # loader = PluginLoader()
+        # loader.load('plugins')
 
         self.read_settings()
 
+        # TODO: удалить, пусть по умолчанию редактор пустой
         self.new_tab()
 
-    def close_tab(self, index):
-        pass
+        self.updateStates()
 
-# void MainWindow::closeTab(int index)
-# {
-#     ImageArea *ia = getImageAreaByIndex(index);
-#     if(ia->getEdited())
-#     {
-#         int ans = QMessageBox::warning(this, tr("Closing Tab..."),
-#                                        tr("File has been modified\nDo you want to save changes?"),
-#                                        QMessageBox::Yes | QMessageBox::Default,
-#                                        QMessageBox::No, QMessageBox::Cancel | QMessageBox::Escape);
-#         switch(ans)
-#         {
-#         case QMessageBox::Yes:
-#             ia->save();
-#             break;
-#         case QMessageBox::Cancel:
-#             return;
-#         }
-#     }
-#     mUndoStackGroup->removeStack(ia->getUndoStack()); //for safety
-#     QWidget *wid = mTabWidget->widget(index);
-#     mTabWidget->removeTab(index);
-#     delete wid;
-#     if (mTabWidget->count() == 0)
-#     {
-#         setWindowTitle("Empty - EasyPaint");
-#     }
-# }
+    def updateStates(self):
+        title = 'Empty'
+
+        if self.ui.tabWidget.count() > 0:
+            canvas = self.get_current_canvas()
+            title = canvas.getFileName()
+
+        # TODO: названия проги хранить в синглетоне, и оттуда брать
+        self.setWindowTitle(title + " - fake-painter")
+
+
+    def close_tab(self, index):
+        canvas = self.get_canvas(index)
+        if canvas.getEdited():
+            reply = QMessageBox.warning(self,
+                                      "Closing Tab...",
+                                      "File has been modified\n"
+                                      "Do you want to save changes?",
+                                      QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
+                                      QMessageBox.Yes)
+
+            if reply == QMessageBox.Yes:
+                canvas.save()
+            elif reply == QMessageBox.Cancel:
+                return
+
+        self.mUndoStackGroup.removeStack(canvas.getUndoStack())
+
+        tab = self.ui.tabWidget.widget(index)
+        self.ui.tabWidget.removeTab(index)
+        tab.deleteLater()
+
+        self.updateStates()
 
     def new_tab(self):
         canvas = Canvas()
@@ -90,30 +94,26 @@ class MainWindow(QMainWindow, QObject):
         scroll_area.setWidget(canvas)
         scroll_area.setBackgroundRole(QPalette.Dark)
 
-        self.ui.tabWidget.addTab(scroll_area, "untitled")
+        self.ui.tabWidget.addTab(scroll_area, canvas.getFileName())
+
+        self.updateStates()
 
     def activate_tab(self, index):
-        print('activate_tab: ' + str(index))
-
         if index == -1:
             return
 
-        # TODO: проверить, мне кажется при этом слоте так и так
-        # вкладка Index будет текущей
-        self.ui.tabWidget.setCurrentIndex(index)
+        # # TODO: проверить, мне кажется при этом слоте так и так
+        # # вкладка Index будет текущей
+        # self.ui.tabWidget.setCurrentIndex(index)
 
         # TODO: реализовать
         # QSize size = getCurrentImageArea()->getImage()->size();
         # mSizeLabel->setText(QString("%1 x %2").arg(size.width()).arg(size.height()));
 
         canvas = self.get_current_canvas()
-
-        if canvas.getFileName():
-            self.setWindowTitle(canvas.getFileName() + " - fake-painter")
-        else:
-            self.setWindowTitle("Untitled Image" + " - fake-painter")
-
         self.mUndoStackGroup.setActiveStack(canvas.getUndoStack())
+
+        self.updateStates()
 
 
     # def save(self):
@@ -173,15 +173,22 @@ class MainWindow(QMainWindow, QObject):
         ini = QSettings('settings.ini')
         self.restoreGeometry(ini.value('MainWindow_Geometry'))
         self.restoreState(ini.value('MainWindow_State'))
-        # self.ui.splitter.restoreState(ini.value('Splitter_State'))
 
     def write_settings(self):
         ini = QSettings('settings.ini')
         ini.setValue('MainWindow_State', self.saveState())
         ini.setValue('MainWindow_Geometry', self.saveGeometry())
-        # ini.setValue('Splitter_State', self.ui.splitter.saveState())
 
     def closeEvent(self, *args, **kwargs):
         self.write_settings()
+
+        # reply = QtGui.QMessageBox.question(self, 'Message',
+        #     "Are you sure to quit?", QtGui.QMessageBox.Yes |
+        #     QtGui.QMessageBox.No, QtGui.QMessageBox.No)
+        #
+        # if reply == QtGui.QMessageBox.Yes:
+        #     event.accept()
+        # else:
+        #     event.ignore()
 
         super().closeEvent(*args, **kwargs)

@@ -5,8 +5,9 @@ from PySide.QtGui import *
 
 class CorePlugin(IPlugin):
     def init(self, *args, **kwargs):
-        self.window = QMainWindow()
-        self.window.show()
+        pass
+        # self.window = QMainWindow()
+        # self.window.show()
 
     def name(self):
         return 'Core Plugin'

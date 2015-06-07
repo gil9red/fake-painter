@@ -84,9 +84,9 @@ class Canvas(QWidget):
 
         self.setImage(im)
 
-    # def save(self):
-    #     pass
-    #
+    def save(self):
+        pass
+
     # def saveAs(self):
     #     pass
     #
@@ -105,6 +105,8 @@ class Canvas(QWidget):
     def getFileName(self):
         if self.filePath:
             return os.path.basename(self.filePath)
+        else:
+            return "Untitled image"
 
     def getImage(self):
         return self.image
@@ -114,10 +116,10 @@ class Canvas(QWidget):
         self.update()
 
     def setEdited(self, flag):
-        pass
+        self.mIsEdited = flag
 
     def getEdited(self):
-        pass
+        return self.mIsEdited
 
     def applyEffect(self, effect):
         pass
