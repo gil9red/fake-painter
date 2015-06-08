@@ -35,9 +35,9 @@ class PencilInstrument(AbstractInstrument):
         if canvas.isPaint():
             self.mEndPoint = event.pos()
 
-            if event.buttons() == Qt.LeftButton:
+            if event.button() == Qt.LeftButton:
                 self.paint(canvas, False)
-            elif event.buttons() == Qt.RightButton:
+            elif event.button() == Qt.RightButton:
                 self.paint(canvas, True)
 
             canvas.setIsPaint(False)
@@ -67,7 +67,7 @@ class PencilInstrument(AbstractInstrument):
         if self.mStartPoint == self.mEndPoint:
             painter.drawPoint(self.mStartPoint)
 
-        canvas.setEdited(True)
-
         painter.end()
+
+        canvas.setEdited(True)
         canvas.update()
