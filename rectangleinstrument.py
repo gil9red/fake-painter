@@ -61,6 +61,7 @@ class RectangleInstrument(AbstractInstrument):
         if self.mStartPoint != self.mEndPoint:
             painter.drawRect(QRect(self.mStartPoint, self.mEndPoint))
 
-        canvas.setEdited(True)
         painter.end()
+
+        canvas.setEdited(True)
         canvas.update()
