@@ -41,8 +41,10 @@ class Canvas(QWidget):
         # TODO: ай-ай-ай
         # from pencilinstrument import PencilInstrument
         # self.mInstrumentHandler = PencilInstrument()
-        from rectangleinstrument import RectangleInstrument
-        self.mInstrumentHandler = RectangleInstrument()
+        # from rectangleinstrument import RectangleInstrument
+        # self.mInstrumentHandler = RectangleInstrument()
+        from lineinstrument import LineInstrument
+        self.mInstrumentHandler = LineInstrument()
         self.image = QImage(400, 400, QImage.Format_ARGB32_Premultiplied)
         self.image.fill(Qt.transparent)
 
