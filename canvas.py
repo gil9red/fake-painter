@@ -39,8 +39,10 @@ class Canvas(QWidget):
         self.setMouseTracking(True)
 
         # TODO: ай-ай-ай
-        from pencilinstrument import PencilInstrument
-        self.mInstrumentHandler = PencilInstrument()
+        # from pencilinstrument import PencilInstrument
+        # self.mInstrumentHandler = PencilInstrument()
+        from rectangleinstrument import RectangleInstrument
+        self.mInstrumentHandler = RectangleInstrument()
         self.image = QImage(400, 400, QImage.Format_ARGB32_Premultiplied)
         self.image.fill(Qt.transparent)
 
