@@ -21,6 +21,13 @@ import sys
 # b = Singleton()
 # print(a is b)
 
+# TODO: сделать скрипт, который проверял бы код
+# pip install pyflakes pep8 pylint
+# pyflakes *.py
+# pep8 *.py
+# pylint *.py
+
+
 # TODO: генерация формы / файла ресурсов
 # pyside-uic -o widget.py widget.ui
 # pyside-rcc -o resource_rc.py resource.qrc
