@@ -32,13 +32,21 @@ import sys
 # pyside-uic -o widget.py widget.ui
 # pyside-rcc -o resource_rc.py resource.qrc
 
+# TODO: избавиться от import * -- много лишнего импортируется
+
 from mainwindow import MainWindow
 
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
+    from pluginsloader import PluginsLoader
+    # TODO: добавить application
+    loader = PluginsLoader(None)
+    loader.enableOutput = True
+    loader.load(['plugins'])
 
-    mw = MainWindow()
-    mw.show()
-
-    sys.exit(app.exec_())
+    # app = QApplication(sys.argv)
+    #
+    # mw = MainWindow()
+    # mw.show()
+    #
+    # sys.exit(app.exec_())

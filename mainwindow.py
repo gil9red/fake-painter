@@ -9,7 +9,7 @@ from mainwindow_ui import Ui_MainWindow
 from PySide.QtGui import *
 from PySide.QtCore import *
 
-from pluginloader import PluginLoader
+from __old_pluginloader import PluginLoader
 from canvas import Canvas
 
 
@@ -44,6 +44,10 @@ class MainWindow(QMainWindow, QObject):
 
         # loader = PluginLoader()
         # loader.load('plugins')
+
+        # from pluginsloader import PluginsLoader
+        # loader = PluginsLoader()
+        # loader.load(['plugins'])
 
         self.read_settings()
 

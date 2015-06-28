@@ -12,10 +12,6 @@ from abc import *
 
 
 class IPlugin(metaclass=ABCMeta):
-    @abstractmethod
-    def init(self, *args, **kwargs):
-        """"""
-
     @abstractproperty
     def name(self):
         """Свойство должно возвращать имя плагина"""
@@ -27,3 +23,7 @@ class IPlugin(metaclass=ABCMeta):
     @abstractproperty
     def description(self):
         """Свойство должно возвращать описание плагина"""
+
+    @abstractmethod
+    def initialize(self, *args, **kwargs):
+        """"""

@@ -3,8 +3,12 @@ __author__ = 'ipetrash'
 from iplugin import IPlugin
 from PySide.QtGui import *
 
-class CorePlugin(IPlugin):
-    def init(self, *args, **kwargs):
+class PluginCore(IPlugin):
+    def __init__(self, application):
+        # TODO: rem
+        from .foo import say
+        say('{} {} {}'.format(self,  'init', application))
+
         pass
         # self.window = QMainWindow()
         # self.window.show()
@@ -17,3 +21,6 @@ class CorePlugin(IPlugin):
 
     def description(self):
         return 'Базовый плагин'
+
+    def initialize(self):
+        pass
