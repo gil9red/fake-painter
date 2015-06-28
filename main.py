@@ -40,6 +40,7 @@ from mainwindow import MainWindow
 if __name__ == '__main__':
     from pluginsloader import PluginsLoader
     # TODO: добавить application
+    # TODO: проверить импортирование пакетов пакетов
     loader = PluginsLoader(None)
     loader.enableOutput = True
     loader.load(['plugins'])
