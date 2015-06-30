@@ -208,19 +208,21 @@ class MainWindow(QMainWindow, QObject):
         self.ui.actionRedo.setEnabled(enabled)
 
     def read_settings(self):
-        # TODO: проверить наличие settings.ini
-        ini = QSettings('settings.ini')
+        # # TODO: путь к файлу настроек брать из синглетона
+        ini = QSettings('settings.ini', QSettings.IniFormat)
         self.restoreGeometry(ini.value('MainWindow_Geometry'))
         self.restoreState(ini.value('MainWindow_State'))
 
     def write_settings(self):
-        # TODO: проверить наличие settings.ini
-        ini = QSettings('settings.ini')
+        # # TODO: путь к файлу настроек брать из синглетона
+        ini = QSettings('settings.ini', QSettings.IniFormat)
         ini.setValue('MainWindow_State', self.saveState())
         ini.setValue('MainWindow_Geometry', self.saveGeometry())
 
     def closeEvent(self, *args, **kwargs):
         self.write_settings()
+
+        # TODO: тут нужно закрывать все открытые вкладки
 
         # reply = QtGui.QMessageBox.question(self, 'Message',
         #     "Are you sure to quit?", QtGui.QMessageBox.Yes |
