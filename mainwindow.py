@@ -14,19 +14,21 @@ from canvas import Canvas
 
 
 class MainWindow(QMainWindow, QObject):
-    def __init__(self, parent=None):
+    def __init__(self, datasingleton, parent=None):
         super().__init__(parent)
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        self.datasingleton = datasingleton
+
         self.mUndoStackGroup = QUndoGroup(self)
 
-        self.mUndoStackGroup.canUndoChanged.connect(self.canUndoChanged)
-        self.mUndoStackGroup.canRedoChanged.connect(self.canRedoChanged)
+        self.mUndoStackGroup.canUndoChanged.connect(self.can_undo_changed)
+        self.mUndoStackGroup.canRedoChanged.connect(self.can_redo_changed)
 
-        self.canUndoChanged(self.mUndoStackGroup.canUndo())
-        self.canRedoChanged(self.mUndoStackGroup.canRedo())
+        self.can_undo_changed(self.mUndoStackGroup.canUndo())
+        self.can_redo_changed(self.mUndoStackGroup.canRedo())
 
         self.ui.actionUndo.triggered.connect(self.mUndoStackGroup.undo)
         self.ui.actionRedo.triggered.connect(self.mUndoStackGroup.redo)
@@ -42,6 +44,12 @@ class MainWindow(QMainWindow, QObject):
         self.ui.tabWidget.currentChanged.connect(self.activate_tab)
         self.ui.tabWidget.tabCloseRequested.connect(self.close_tab)
 
+        # # Для стандартной группы инструментов
+        # self.base_inst_action_group = QActionGroup(self)
+        # self.base_inst_action_group.setExclusive(True)
+        # # self.base_inst_action_group.triggered.connect(self.datasingleton.triggered_action_instrument)
+        # self.base_inst_action_group.triggered.connect(self.triggered_action_instrument)
+
         # loader = PluginLoader()
         # loader.load('plugins')
 
@@ -54,9 +62,36 @@ class MainWindow(QMainWindow, QObject):
         # TODO: удалить, пусть по умолчанию редактор пустой
         self.new_tab()
 
-        self.updateStates()
+        self.update_states()
 
-    def updateStates(self):
+    def load_plugins(self):
+        from pluginsloader import PluginsLoader
+        # TODO: добавить application
+        # TODO: проверить импортирование пакетов пакетов
+        loader = PluginsLoader(self.datasingleton)
+        loader.enableOutput = True
+        # TODO: список папок плагинов доставать из синглетона
+        loader.load(['plugins'])
+
+        print()
+        for plugin in loader.plugins():
+            print(plugin)
+
+        # print()
+        # for plugin in loader.plugins():
+        #     plugin.initialize()
+
+        # for act in self.datasingleton.actionInstDict.keys():
+        #     print(act.triggered.connect(self.open))
+
+        # # Объявляем base_inst_action_group в baseinstruments
+        # self.base_inst_action_group.triggered.connect(self.triggered_action_instrument)
+
+    # def triggered_action_instrument(self, action):
+    #     instrument = self.datasingleton.actionInstDict[action]
+    #     self.datasingleton.currentInstrument = instrument
+
+    def update_states(self):
         title = 'Empty'
 
         if self.ui.tabWidget.count() > 0:
@@ -66,16 +101,15 @@ class MainWindow(QMainWindow, QObject):
         # TODO: названия проги хранить в синглетоне, и оттуда брать
         self.setWindowTitle(title + " - fake-painter")
 
-
     def close_tab(self, index):
         canvas = self.get_canvas(index)
         if canvas.getEdited():
             reply = QMessageBox.warning(self,
-                                      "Closing Tab...",
-                                      "File has been modified\n"
-                                      "Do you want to save changes?",
-                                      QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
-                                      QMessageBox.Yes)
+                                        "Closing Tab...",
+                                        "File has been modified\n"
+                                        "Do you want to save changes?",
+                                        QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
+                                        QMessageBox.Yes)
 
             if reply == QMessageBox.Yes:
                 canvas.save()
@@ -88,10 +122,10 @@ class MainWindow(QMainWindow, QObject):
         self.ui.tabWidget.removeTab(index)
         tab.deleteLater()
 
-        self.updateStates()
+        self.update_states()
 
     def new_tab(self):
-        canvas = Canvas()
+        canvas = Canvas(self.datasingleton)
         self.mUndoStackGroup.addStack(canvas.getUndoStack())
 
         scroll_area = QScrollArea()
@@ -100,7 +134,7 @@ class MainWindow(QMainWindow, QObject):
 
         self.ui.tabWidget.addTab(scroll_area, canvas.getFileName())
 
-        self.updateStates()
+        self.update_states()
 
     def activate_tab(self, index):
         if index == -1:
@@ -117,7 +151,7 @@ class MainWindow(QMainWindow, QObject):
         canvas = self.get_current_canvas()
         self.mUndoStackGroup.setActiveStack(canvas.getUndoStack())
 
-        self.updateStates()
+        self.update_states()
 
 
     # def save(self):
@@ -155,7 +189,7 @@ class MainWindow(QMainWindow, QObject):
             except Exception as e:
                 QMessageBox.warning(self, 'Внимание', str(e))
 
-    def canUndoChanged(self, enabled):
+    def can_undo_changed(self, enabled):
         self.ui.actionUndo.setEnabled(enabled)
 
     def get_canvas(self, index):
@@ -170,15 +204,17 @@ class MainWindow(QMainWindow, QObject):
         if index != -1:
             return self.get_canvas(index)
 
-    def canRedoChanged(self, enabled):
+    def can_redo_changed(self, enabled):
         self.ui.actionRedo.setEnabled(enabled)
 
     def read_settings(self):
+        # TODO: проверить наличие settings.ini
         ini = QSettings('settings.ini')
         self.restoreGeometry(ini.value('MainWindow_Geometry'))
         self.restoreState(ini.value('MainWindow_State'))
 
     def write_settings(self):
+        # TODO: проверить наличие settings.ini
         ini = QSettings('settings.ini')
         ini.setValue('MainWindow_State', self.saveState())
         ini.setValue('MainWindow_Geometry', self.saveGeometry())

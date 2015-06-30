@@ -13,14 +13,26 @@ from PySide.QtGui import *
 
 
 class PencilInstrument(AbstractInstrument):
-    def mousePressEvent(self, event, canvas):
+    def __init__(self):
+        self.__icon = QIcon('plugins/baseinstruments/icons/pencil.png')
+
+    def name(self):
+        return 'Pencil Instrument'
+
+    def description(self):
+        return 'Pencil Instrument'
+
+    def icon(self):
+        return self.__icon
+
+    def mouse_press_event(self, event, canvas):
         if event.buttons() == Qt.LeftButton or event.buttons() == Qt.RightButton:
             self.mStartPoint = event.pos()
             self.mEndPoint = event.pos()
             canvas.setIsPaint(True)
-            self.makeUndoCommand(canvas)
+            self.make_undo_command(canvas)
 
-    def mouseMoveEvent(self, event, canvas):
+    def mouse_move_event(self, event, canvas):
         if canvas.isPaint():
             self.mEndPoint = event.pos()
 
@@ -31,7 +43,7 @@ class PencilInstrument(AbstractInstrument):
 
             self.mStartPoint = event.pos()
 
-    def mouseReleaseEvent(self, event, canvas):
+    def mouse_release_event(self, event, canvas):
         if canvas.isPaint():
             self.mEndPoint = event.pos()
 

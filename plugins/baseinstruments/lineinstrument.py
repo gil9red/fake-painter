@@ -13,16 +13,27 @@ from PySide.QtGui import *
 from PySide.QtCore import *
 
 
-class RectangleInstrument(AbstractInstrument):
-    def mousePressEvent(self, event, canvas):
-        if event.buttons() == Qt.LeftButton or event.buttons() == Qt.RightButton:
-            self.mStartPoint = event.pos()
-            self.mEndPoint = event.pos()
-            canvas.setIsPaint(True)
-            self.mImageCopy = canvas.getImage()
-            self.makeUndoCommand(canvas)
+class LineInstrument(AbstractInstrument):
+    def __init__(self):
+        self.__icon = QIcon('plugins/baseinstruments/icons/line.png')
 
-    def mouseMoveEvent(self, event, canvas):
+    def name(self):
+        return 'Line Instrument'
+
+    def description(self):
+        return 'Line Instrument'
+
+    def icon(self):
+        return self.__icon
+
+    def mouse_press_event(self, event, canvas):
+        self.mStartPoint = event.pos()
+        self.mEndPoint = event.pos()
+        self.mImageCopy = canvas.getImage()
+        canvas.setIsPaint(True)
+        self.make_undo_command(canvas)
+
+    def mouse_move_event(self, event, canvas):
         if canvas.isPaint():
             self.mEndPoint = event.pos()
             canvas.setImage(self.mImageCopy.copy())
@@ -32,7 +43,7 @@ class RectangleInstrument(AbstractInstrument):
             elif event.buttons() == Qt.RightButton:
                 self.paint(canvas, True)
 
-    def mouseReleaseEvent(self, event, canvas):
+    def mouse_release_event(self, event, canvas):
         if canvas.isPaint():
             canvas.setIsPaint(False)
 
@@ -58,8 +69,7 @@ class RectangleInstrument(AbstractInstrument):
 
         painter.setPen(pen)
 
-        if self.mStartPoint != self.mEndPoint:
-            painter.drawRect(QRect(self.mStartPoint, self.mEndPoint))
+        painter.drawLine(self.mStartPoint, self.mEndPoint)
 
         painter.end()
 

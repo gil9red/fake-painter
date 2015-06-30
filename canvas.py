@@ -10,12 +10,18 @@ __author__ = 'ipetrash'
 
 from PySide.QtGui import *
 from PySide.QtCore import *
+# import datasingleton
 import os.path
 
 
 class Canvas(QWidget):
     def __init__(self):
         super().__init__()
+
+    def __init__(self, datasingleton):
+        super().__init__()
+
+        self.datasingleton = datasingleton
 
         self.image = QImage()
         self.imageCopy = QImage()
@@ -34,17 +40,18 @@ class Canvas(QWidget):
         # TODO: брать из синглетона-настроек
         # mUndoStack->setUndoLimit(DataSingleton::Instance()->getHistoryDepth());
 
-        self.mInstrumentHandler = None
+        # TODO: remove
+        # self.mInstrumentHandler = None
 
         self.setMouseTracking(True)
 
-        # TODO: ай-ай-ай
-        # from pencilinstrument import PencilInstrument
-        # self.mInstrumentHandler = PencilInstrument()
-        # from rectangleinstrument import RectangleInstrument
-        # self.mInstrumentHandler = RectangleInstrument()
-        from lineinstrument import LineInstrument
-        self.mInstrumentHandler = LineInstrument()
+        # # TODO: ай-ай-ай
+        # # from pencilinstrument import PencilInstrument
+        # # self.mInstrumentHandler = PencilInstrument()
+        # # from rectangleinstrument import RectangleInstrument
+        # # self.mInstrumentHandler = RectangleInstrument()
+        # from lineinstrument import LineInstrument
+        # self.mInstrumentHandler = LineInstrument()
         self.image = QImage(400, 400, QImage.Format_ARGB32_Premultiplied)
         self.image.fill(Qt.transparent)
 
@@ -201,6 +208,15 @@ class Canvas(QWidget):
     def rect_bottom_right_corner(self):
         return QRect(self.image.rect().right(), self.image.rect().bottom(), 6, 6)
 
+    # # TODO: remove
+    # def set_instrument(self, instrument):
+    #     self.mInstrumentHandler = instrument
+
+    def get_instrument(self):
+        # mainWindow
+        # print('@@@ get_ins', datasingleton.DataSingleton.currentInstrument)
+        return self.datasingleton.currentInstrument
+
     def mousePressEvent(self, event):
         if event.buttons() == Qt.LeftButton and self.rect_bottom_right_corner().contains(event.pos()):
             self.mIsResize = True
@@ -214,7 +230,12 @@ class Canvas(QWidget):
         # }
 
         else:
-            self.mInstrumentHandler.mousePressEvent(event, self)
+            instrument = self.get_instrument()
+            if instrument:
+                instrument.mouse_press_event(event, self)
+
+            # if self.mInstrumentHandler:
+            #     self.mInstrumentHandler.mouse_press_event(event, self)
 
         super().mousePressEvent(event)
 
@@ -276,7 +297,11 @@ class Canvas(QWidget):
             self.setCursor(Qt.ArrowCursor)
 
         # Рисуем, используя инструмент
-        self.mInstrumentHandler.mouseMoveEvent(event, self)
+        instrument = self.get_instrument()
+        if instrument:
+            instrument.mouse_move_event(event, self)
+        # if self.mInstrumentHandler:
+        #     self.mInstrumentHandler.mouse_move_event(event, self)
 
         super().mouseMoveEvent(event)
 
@@ -292,7 +317,11 @@ class Canvas(QWidget):
         #     mInstrumentHandler->mouseReleaseEvent(event, *this);
         # }
         else:
-            self.mInstrumentHandler.mouseReleaseEvent(event, self)
+            # if self.mInstrumentHandler:
+            #     self.mInstrumentHandler.mouse_release_event(event, self)
+            instrument = self.get_instrument()
+            if instrument:
+                instrument.mouse_release_event(event, self)
 
         super().mouseReleaseEvent(event)
 

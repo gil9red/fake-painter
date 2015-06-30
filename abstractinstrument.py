@@ -11,29 +11,43 @@ from abc import *
 from undocommand import UndoCommand
 
 
+# TODO: может и версию добавить?
+
 class AbstractInstrument(metaclass=ABCMeta):
     def __init__(self):
         self.mStartPoint = None
         self.mEndPoint = None
         self.mImageCopy = None
 
+    @abstractproperty
+    def name(self):
+        """Свойство должно возвращать имя инструмента"""
+
+    @abstractproperty
+    def description(self):
+        """Свойство должно возвращать всплывающую подсказку к инструменту"""
+
+    @abstractproperty
+    def icon(self):
+        """Свойство должно возвращать иконку инструмента"""
+
     @abstractmethod
-    def mousePressEvent(self, event, canvas):
+    def mouse_press_event(self, event, canvas):
         pass
 
     @abstractmethod
-    def mouseMoveEvent(self, event, canvas):
+    def mouse_move_event(self, event, canvas):
         pass
 
     @abstractmethod
-    def mouseReleaseEvent(self, event, canvas):
+    def mouse_release_event(self, event, canvas):
         pass
 
     @abstractmethod
     def paint(self, canvas, is_secondary_color=False, additional_flag=False):
         pass
 
-    def makeUndoCommand(self, canvas):
+    def make_undo_command(self, canvas):
         """
         Creates UndoCommand & pushes it to UndoStack.
         Base realisation simply save all image to UndoStack

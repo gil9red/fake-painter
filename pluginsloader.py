@@ -14,8 +14,8 @@ class PluginsLoader:
     """
     Класс для загрузки плагинов
     """
-    def __init__(self, application):
-        self.__application = application
+    def __init__(self, datasingleton):
+        self.datasingleton = datasingleton
 
         # Словарь с загруженными плагинами
         # Ключ - имя плагина
@@ -150,17 +150,23 @@ class PluginsLoader:
                 # и попытаемся их импортировать
                 for fileName in sorted(os.listdir(packagePath)):
                     print('fileName=', fileName)  # TODO: rem
-                    try:
-                        module = self._import_single_module(packageName, fileName)
-                        print('module=', module) # TODO: rem
-                        if module is not None:
-                            self.__load_plugin(module)
-                    except BaseException as e:
-                        errors.append("*** Plugin {package} loading error ***\n"
-                                      "{package}/{fileName}\n"
-                                      "{error}".format(package=packageName,
-                                                       fileName=fileName,
-                                                       error=str(e)))
+
+                    module = self._import_single_module(packageName, fileName)
+                    print('module=', module) # TODO: rem
+                    if module is not None:
+                        self.__load_plugin(module)
+
+                    # try:
+                    #     module = self._import_single_module(packageName, fileName)
+                    #     print('module=', module) # TODO: rem
+                    #     if module is not None:
+                    #         self.__load_plugin(module)
+                    # except BaseException as e:
+                    #     errors.append("*** Plugin {package} loading error ***\n"
+                    #                   "{package}/{fileName}\n"
+                    #                   "{error}".format(package=packageName,
+                    #                                    fileName=fileName,
+                    #                                    error=str(e)))
 
                 # Проверим, удалось ли загрузить плагин
                 newPluginsCount = len(self.__plugins) + len(self.__disabled_plugins)
@@ -223,11 +229,12 @@ class PluginsLoader:
             # if obj == Plugin or not issubclass(obj, Plugin):
             #     return
 
-            # Создаем плагин, и в его конструктор передаем __application
+            # Создаем плагин, и в его конструктор передаем datasingleton
             print('obj=', obj) # TODO: rem
-            plugin = obj(self.__application)
+            print('self.datasingleton=', self.datasingleton)
+            plugin = obj(self.datasingleton)
             print('plugin=', plugin) # TODO: rem
-            if not self.__isNewPlugin(plugin.name):
+            if not self.__is_new_plugin(plugin.name):
                 return
 
             if plugin.name not in disabled_plugins:
@@ -236,7 +243,7 @@ class PluginsLoader:
             else:
                 self.__disabled_plugins[plugin.name] = plugin
 
-    def __isNewPlugin(self, pluginname):
+    def __is_new_plugin(self, pluginname):
         """
         Проверка того, что плагин с таким именем еще не был загружен
         newplugin - плагин, который надо проверить
@@ -244,11 +251,14 @@ class PluginsLoader:
         return(pluginname not in self.__plugins and
                 pluginname not in self.__disabled_plugins)
 
-    def __len__(self):
-        return len(self.__plugins)
+    def plugins(self):
+        return self.__plugins.values()
 
-    def __getitem__(self, pluginname):
-        return self.__plugins[pluginname]
-
-    def __iter__(self):
-        return self.__plugins.itervalues()
+    # def __len__(self):
+    #     return len(self.__plugins)
+    #
+    # def __getitem__(self, pluginname):
+    #     return self.__plugins[pluginname]
+    #
+    # def __iter__(self):
+    #     return self.__plugins.items()

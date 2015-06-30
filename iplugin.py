@@ -27,3 +27,6 @@ class IPlugin(metaclass=ABCMeta):
     @abstractmethod
     def initialize(self, *args, **kwargs):
         """"""
+
+    # def __str__(self):
+    #     return '{} ({})'.format(self.name(), self.version())

@@ -11,15 +11,6 @@ from PySide.QtGui import *
 from PySide.QtCore import *
 import sys
 
-# class Singleton(object):
-#     def __new__(cls):
-#         if not hasattr(cls, 'instance'):
-#              cls.instance = super(Singleton, cls).__new__(cls)
-#         return cls.instance
-#
-# a = Singleton()
-# b = Singleton()
-# print(a is b)
 
 # TODO: сделать скрипт, который проверял бы код
 # pip install pyflakes pep8 pylint
@@ -34,20 +25,25 @@ import sys
 
 # TODO: избавиться от import * -- много лишнего импортируется
 
-from mainwindow import MainWindow
+# from mainwindow import mainWindow
 
+# TODO: может при закрытии последней вкладки, закрывать программу?
+# TODO: при закрытии окна, закрывать вкладки, проверять на изменения
 
 if __name__ == '__main__':
-    from pluginsloader import PluginsLoader
-    # TODO: добавить application
-    # TODO: проверить импортирование пакетов пакетов
-    loader = PluginsLoader(None)
-    loader.enableOutput = True
-    loader.load(['plugins'])
+    app = QApplication(sys.argv)
 
-    # app = QApplication(sys.argv)
-    #
-    # mw = MainWindow()
-    # mw.show()
-    #
-    # sys.exit(app.exec_())
+    # print('MAIN')
+    # import datasingleton
+    # print('datasingleton=', dir(datasingleton))
+    from datasingleton import DataSingleton
+
+    # print('datasingleton=', dir(datasingleton))
+
+    # # mainWindow = MainWindow()
+    # mainWindow = DataSingleton.mainWindow
+    # mainWindow.show()
+
+    DataSingleton.mainWindow.show()
+
+    sys.exit(app.exec_())
