@@ -37,8 +37,8 @@ class PluginBaseInstruments(IPlugin):
         return 'Базовые инструменты'
 
     def initialize(self):
-        self.instruments.append(LineInstrument())
         self.instruments.append(PencilInstrument())
+        self.instruments.append(LineInstrument())
         self.instruments.append(RectangleInstrument())
 
         mw = self.datasingleton.mainWindow
@@ -59,6 +59,8 @@ class PluginBaseInstruments(IPlugin):
 
         for inst in self.instruments:
             act = base_inst_tool_bar.addAction(inst.icon(), inst.name())
+            # TODO: objectName вида <class 'baseinstruments.rectangleinstrument.RectangleInstrument'>
+            # кажется неудобным, может другое значение составлять
             act.setObjectName(str(type(inst)))
             act.setToolTip(inst.description())
             act.setIcon(inst.icon())

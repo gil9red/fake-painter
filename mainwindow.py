@@ -57,7 +57,7 @@ class MainWindow(QMainWindow, QObject):
         # loader = PluginsLoader()
         # loader.load(['plugins'])
 
-        self.read_settings()
+        # self.read_settings()
 
         # TODO: удалить, пусть по умолчанию редактор пустой
         self.new_tab()

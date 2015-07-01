@@ -31,3 +31,4 @@ class DataSingleton:
 
 DataSingleton.mainWindow = MainWindow(DataSingleton)
 DataSingleton.mainWindow.load_plugins()
+DataSingleton.mainWindow.read_settings()
