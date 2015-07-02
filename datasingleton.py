@@ -9,18 +9,6 @@ __author__ = 'ipetrash'
 
 
 from mainwindow import MainWindow
-# from PySide.QtCore import *
-
-print('datasingleton module')
-
-# class Singleton(type):
-#     _instances = {}
-#     def __call__(cls, *args, **kwargs):
-#         if cls not in cls._instances:
-#             cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
-#         return cls._instances[cls]
-
-
 import json
 
 
@@ -80,75 +68,4 @@ class DataSingleton:
             self.base_height = data['base_height']
 
 
-    # def to_JSON(self):
-    #     import json
-    #     return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-
-    # class Image:
-    #     def __init__(self):
-    #         self.history_depth = 40
-    #         self.base_width = 640
-    #         self.base_height = 480
-
-
 instance = DataSingleton()
-
-# import jsonpickle
-# frozen = jsonpickle.encode(data_singleton)
-# print(frozen)
-
-# import json
-# # write the serialized data in the file
-# with open('dataSingleton.pkl', 'wb') as f:
-#     json.dump(dataSingleton.__dict__, f)
-
-# print(pickle.dumps(dataSingleton))
-# import json
-# print(json.dumps(dataSingleton, cls=DataSingleton, skipkeys=True))
-
-# dataSingleton.mainWindow = MainWindow(DataSingleton)
-# dataSingleton.mainWindow.load_plugins()
-# dataSingleton.mainWindow.read_settings()
-
-# class DataSingleton:
-#     """
-#     Singleton for variables needed for the program.
-#     """
-#
-#     def __new__(cls):
-#         if not hasattr(cls, 'instance'):
-#             cls.instance = super(DataSingleton, cls).__new__(cls)
-#         return cls.instance
-#
-#     # def triggered_action_instrument(action):
-#     #     instrument = DataSingleton.actionInstDict[action]
-#     #     DataSingleton.currentInstrument = instrument
-#
-#     currentInstrument = None
-#     actionInstDict = {}
-#     # instActionDict = {}
-#
-#     class Image:
-#         history_depth = 40
-#         base_width = 640
-#         base_height = 480
-#
-#     @classmethod
-#     def read(cls, ini):
-#         ini.beginGroup('Image')
-#         ini.setValue('history_depth', cls.Image.history_depth)
-#         ini.setValue('base_width', cls.Image.base_width)
-#         ini.setValue('base_height', cls.Image.base_height)
-#         ini.endGroup()
-#
-#     @classmethod
-#     def write(cls, ini):
-#         ini.beginGroup('Image')
-#         cls.Image.history_depth = ini.value('history_depth', 40)
-#         cls.Image.base_width = ini.value('base_width', 640)
-#         cls.Image.base_height = ini.value('base_height', 480)
-#         ini.endGroup()
-#
-# DataSingleton.mainWindow = MainWindow(DataSingleton)
-# DataSingleton.mainWindow.load_plugins()
-# DataSingleton.mainWindow.read_settings()

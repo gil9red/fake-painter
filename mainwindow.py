@@ -12,8 +12,6 @@ from mainwindow_ui import Ui_MainWindow
 from PySide.QtGui import *
 from PySide.QtCore import *
 from settings import Settings
-
-# from __old_pluginloader import PluginLoader
 from canvas import Canvas
 
 
@@ -50,21 +48,6 @@ class MainWindow(QMainWindow, QObject):
         self.ui.tabWidget.currentChanged.connect(self.activate_tab)
         self.ui.tabWidget.tabCloseRequested.connect(self.close_tab)
 
-        # # Для стандартной группы инструментов
-        # self.base_inst_action_group = QActionGroup(self)
-        # self.base_inst_action_group.setExclusive(True)
-        # # self.base_inst_action_group.triggered.connect(self.datasingleton.triggered_action_instrument)
-        # self.base_inst_action_group.triggered.connect(self.triggered_action_instrument)
-
-        # loader = PluginLoader()
-        # loader.load('plugins')
-
-        # from pluginsloader import PluginsLoader
-        # loader = PluginsLoader()
-        # loader.load(['plugins'])
-
-        # self.read_settings()
-
         self.update_states()
 
     def load_plugins(self):
@@ -76,23 +59,10 @@ class MainWindow(QMainWindow, QObject):
         # TODO: список папок плагинов доставать из синглетона
         loader.load(['plugins'])
 
+        # TODO: rem
         print()
         for plugin in loader.plugins():
             print(plugin)
-
-        # print()
-        # for plugin in loader.plugins():
-        #     plugin.initialize()
-
-        # for act in self.datasingleton.actionInstDict.keys():
-        #     print(act.triggered.connect(self.open))
-
-        # # Объявляем base_inst_action_group в baseinstruments
-        # self.base_inst_action_group.triggered.connect(self.triggered_action_instrument)
-
-    # def triggered_action_instrument(self, action):
-    #     instrument = self.datasingleton.actionInstDict[action]
-    #     self.datasingleton.currentInstrument = instrument
 
     def update_states(self):
         title = 'Empty'
@@ -156,7 +126,6 @@ class MainWindow(QMainWindow, QObject):
 
         self.update_states()
 
-
     # def save(self):
     #     print(self.currentCanvas())
 
@@ -215,11 +184,6 @@ class MainWindow(QMainWindow, QObject):
         self.ui.actionRedo.setEnabled(enabled)
 
     def read_settings(self):
-        # TODO: rem
-        # ini = QSettings('settings.ini', QSettings.IniFormat)
-        # self.restoreGeometry(ini.value('MainWindow_Geometry'))
-        # self.restoreState(ini.value('MainWindow_State'))
-
         try:
             import json
             with open(self.datasingleton.settings_path, 'r') as f:
@@ -233,11 +197,6 @@ class MainWindow(QMainWindow, QObject):
             print(e)
 
     def write_settings(self):
-        # TODO: rem
-        # ini = QSettings('settings.ini', QSettings.IniFormat)
-        # ini.setValue('MainWindow_State', self.saveState())
-        # ini.setValue('MainWindow_Geometry', self.saveGeometry())
-
         try:
             import json
             with open(self.datasingleton.settings_path, 'w') as f:

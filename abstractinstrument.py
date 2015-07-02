@@ -7,7 +7,7 @@
 
 __author__ = 'ipetrash'
 
-from abc import *
+from abc import ABCMeta
 from undocommand import UndoCommand
 
 
@@ -47,7 +47,8 @@ class AbstractInstrument(metaclass=ABCMeta):
     def paint(self, canvas, is_secondary_color=False, additional_flag=False):
         pass
 
-    def make_undo_command(self, canvas):
+    @staticmethod
+    def make_undo_command(canvas):
         """
         Creates UndoCommand & pushes it to UndoStack.
         Base realisation simply save all image to UndoStack

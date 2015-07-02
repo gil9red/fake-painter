@@ -7,8 +7,7 @@
 
 __author__ = 'ipetrash'
 
-from PySide.QtGui import *
-from PySide.QtCore import *
+from PySide.QtGui import QApplication
 import sys
 
 
@@ -25,27 +24,17 @@ import sys
 
 # TODO: избавиться от import * -- много лишнего импортируется
 
-# from mainwindow import mainWindow
-
 # TODO: может при закрытии последней вкладки, закрывать программу?
 # TODO: при закрытии окна, закрывать вкладки, проверять на изменения
 # TODO: обозвать как-нибудь дефолтный toolbar
 
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
 
-    # print('MAIN')
-    # import datasingleton
-    # print('datasingleton=', dir(datasingleton))
-    # from datasingleton import data_singleton
     import datasingleton
-    # print(dir(datasingleton), dir())
-    # print('datasingleton=', dir(datasingleton))
 
-    # # mainWindow = MainWindow()
-    # mainWindow = DataSingleton.mainWindow
-    # mainWindow.show()
-
-    datasingleton.instance.mainWindow.show()
+    mw = datasingleton.instance.mainWindow
+    mw.show()
 
     sys.exit(app.exec_())

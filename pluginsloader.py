@@ -127,10 +127,7 @@ class PluginsLoader:
         """
         assert dir_packages_list is not None
 
-        print(dir_packages_list) # TODO: rem
         for packageName in dir_packages_list:
-            print('packageName=', packageName) # TODO: rem
-            # TODO: возможно, __pycache__ будет полезен
             if packageName == '__pycache__':
                 continue
 
@@ -149,10 +146,7 @@ class PluginsLoader:
                 # Переберем все файлы внутри packagePath
                 # и попытаемся их импортировать
                 for fileName in sorted(os.listdir(packagePath)):
-                    print('fileName=', fileName)  # TODO: rem
-
                     module = self._import_single_module(packageName, fileName)
-                    print('module=', module) # TODO: rem
                     if module is not None:
                         self.__load_plugin(module)
 
@@ -235,10 +229,7 @@ class PluginsLoader:
             #     return
 
             # Создаем плагин, и в его конструктор передаем datasingleton
-            print('obj=', obj) # TODO: rem
-            print('self.datasingleton=', self.datasingleton)
             plugin = obj(self.datasingleton)
-            print('plugin=', plugin) # TODO: rem
             if not self.__is_new_plugin(plugin.name):
                 return
 
@@ -258,12 +249,3 @@ class PluginsLoader:
 
     def plugins(self):
         return self.__plugins.values()
-
-    # def __len__(self):
-    #     return len(self.__plugins)
-    #
-    # def __getitem__(self, pluginname):
-    #     return self.__plugins[pluginname]
-    #
-    # def __iter__(self):
-    #     return self.__plugins.items()

@@ -10,26 +10,22 @@ __author__ = 'ipetrash'
 
 from PySide.QtGui import *
 from PySide.QtCore import *
-# import datasingleton
 import os.path
 
 
 class Canvas(QWidget):
-    def __init__(self):
+    def __init__(self, data_singleton):
         super().__init__()
 
-    def __init__(self, datasingleton):
-        super().__init__()
-
-        self.datasingleton = datasingleton
+        self.data_singleton = data_singleton
 
         self.image = QImage()
         self.imageCopy = QImage()
-        self.filePath = None
+        self.file_path = None
 
         self.mIsEdited = False
         self.mIsPaint = False
-        self.mIsResize = False
+        self.m_is_resize = False
         self.mRightButtonPressed = False
 
         self.mPixmap = None
@@ -37,12 +33,11 @@ class Canvas(QWidget):
         self.mZoomFactor = 1.0
 
         self.mUndoStack = QUndoStack(self)
-        self.mUndoStack.setUndoLimit(self.datasingleton.image.history_depth)
+        self.mUndoStack.setUndoLimit(self.data_singleton.image.history_depth)
 
         self.setMouseTracking(True)
 
-        print(self.datasingleton.image.base_width, self.datasingleton.image.base_height)
-        self.image = QImage(self.datasingleton.image.base_width, self.datasingleton.image.base_height,
+        self.image = QImage(self.data_singleton.image.base_width, self.data_singleton.image.base_height,
                             QImage.Format_ARGB32_Premultiplied)
         self.image.fill(Qt.transparent)
 
@@ -77,7 +72,7 @@ class Canvas(QWidget):
             raise Exception('Не удалось сохранить в "{}"'.format(file_name))
 
     def load(self, file_name):
-        self.filePath = file_name
+        self.file_path = file_name
         im = QImage()
 
         # Если не удалось сохранить
@@ -105,8 +100,8 @@ class Canvas(QWidget):
         pass
 
     def getFileName(self):
-        if self.filePath:
-            return os.path.basename(self.filePath)
+        if self.file_path:
+            return os.path.basename(self.file_path)
         else:
             return "Untitled image"
 
@@ -199,34 +194,17 @@ class Canvas(QWidget):
     def rect_bottom_right_corner(self):
         return QRect(self.image.rect().right(), self.image.rect().bottom(), 6, 6)
 
-    # # TODO: remove
-    # def set_instrument(self, instrument):
-    #     self.mInstrumentHandler = instrument
-
     def get_instrument(self):
-        # mainWindow
-        # print('@@@ get_ins', datasingleton.DataSingleton.currentInstrument)
         return self.datasingleton.currentInstrument
 
     def mousePressEvent(self, event):
         if event.buttons() == Qt.LeftButton and self.rect_bottom_right_corner().contains(event.pos()):
-            self.mIsResize = True
+            self.m_is_resize = True
             self.setCursor(Qt.SizeFDiagCursor)
-
-        # TODO: выбор какого-нибудь иснтрумента
-        # else if(DataSingleton::Instance()->getInstrument() != NONE_INSTRUMENT)
-        # {
-        #     mInstrumentHandler = mInstrumentsHandlers.at(DataSingleton::Instance()->getInstrument());
-        #     mInstrumentHandler->mousePressEvent(event, *this);
-        # }
-
         else:
             instrument = self.get_instrument()
             if instrument:
                 instrument.mouse_press_event(event, self)
-
-            # if self.mInstrumentHandler:
-            #     self.mInstrumentHandler.mouse_press_event(event, self)
 
         super().mousePressEvent(event)
 
@@ -262,7 +240,7 @@ class Canvas(QWidget):
         #     mInstrumentHandler->mouseMoveEvent(event, *this);
         # }
 
-        if self.mIsResize:
+        if self.m_is_resize:
             width = event.pos().x()
             height = event.pos().y()
 
@@ -291,25 +269,14 @@ class Canvas(QWidget):
         instrument = self.get_instrument()
         if instrument:
             instrument.mouse_move_event(event, self)
-        # if self.mInstrumentHandler:
-        #     self.mInstrumentHandler.mouse_move_event(event, self)
 
         super().mouseMoveEvent(event)
 
-    # TODO: canvas.mouseReleaseEvent не реализован
     def mouseReleaseEvent(self, event):
-        if self.mIsResize:
-           self.mIsResize = False
-           self.restoreCursor()
-        # TODO: реализация взятия инструмента из синглетона
-        # elif (DataSingleton::Instance()->getInstrument() != NONE_INSTRUMENT)
-        # {
-        #     mInstrumentHandler = mInstrumentsHandlers.at(DataSingleton::Instance()->getInstrument());
-        #     mInstrumentHandler->mouseReleaseEvent(event, *this);
-        # }
+        if self.m_is_resize:
+            self.m_is_resize = False
+            self.restoreCursor()
         else:
-            # if self.mInstrumentHandler:
-            #     self.mInstrumentHandler.mouse_release_event(event, self)
             instrument = self.get_instrument()
             if instrument:
                 instrument.mouse_release_event(event, self)
@@ -320,7 +287,6 @@ class Canvas(QWidget):
         painter = QPainter(self)
         painter.setPen(Qt.NoPen)
 
-        # TODO: рисуем шахматную доску
         # TODO: иконки через ресурсы брать
         painter.setBrush(QBrush(QPixmap("transparent.jpg")))
         painter.drawRect(0, 0,

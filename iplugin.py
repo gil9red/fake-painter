@@ -8,7 +8,7 @@
 __author__ = 'ipetrash'
 
 
-from abc import *
+from abc import ABCMeta, abstractproperty, abstractmethod
 
 
 class IPlugin(metaclass=ABCMeta):

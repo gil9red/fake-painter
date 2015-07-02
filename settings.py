@@ -12,10 +12,6 @@ from settings_ui import Ui_Settings
 from PySide.QtGui import *
 from PySide.QtCore import *
 
-# import datasingleton
-# print(dir(datasingleton))
-# from datasingleton import data_singleton as data_singleton
-
 
 class Settings(QDialog, QObject):
     def __init__(self, datasingleton, parent=None):
@@ -25,11 +21,6 @@ class Settings(QDialog, QObject):
         self.ui.setupUi(self)
 
         self.datasingleton = datasingleton
-
-        # self.ui.sbWidth.setValue(int(self.datasingleton.Image.base_width))
-        # self.ui.sbHeight.setValue(int(self.datasingleton.Image.base_height))
-        #
-        # self.ui.sbHistoryDepth.setValue(int(self.datasingleton.Image.history_depth))
 
         self.ui.sbWidth.setValue(int(self.datasingleton.image.base_width))
         self.ui.sbHeight.setValue(int(self.datasingleton.image.base_height))
@@ -44,8 +35,5 @@ class Settings(QDialog, QObject):
         self.datasingleton.image.base_height = self.ui.sbHeight.value()
 
         self.datasingleton.mainWindow.write_settings()
-        # # # TODO: путь к файлу настроек брать из синглетона
-        # ini = QSettings('settings.ini', QSettings.IniFormat)
-        # self.datasingleton.write(ini)
 
         super().accept()
