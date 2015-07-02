@@ -7,7 +7,7 @@
 
 __author__ = 'ipetrash'
 
-from abc import ABCMeta
+from abc import ABCMeta, abstractproperty, abstractmethod
 from undocommand import UndoCommand
 
 
