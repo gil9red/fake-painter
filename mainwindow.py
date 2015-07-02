@@ -16,13 +16,13 @@ from canvas import Canvas
 
 
 class MainWindow(QMainWindow, QObject):
-    def __init__(self, datasingleton, parent=None):
+    def __init__(self, data_singleton, parent=None):
         super().__init__(parent)
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.datasingleton = datasingleton
+        self.data_singleton = data_singleton
 
         self.mUndoStackGroup = QUndoGroup(self)
 
@@ -50,11 +50,21 @@ class MainWindow(QMainWindow, QObject):
 
         self.update_states()
 
+        # TODO: перенести в плагин
+        def action_negative():
+            from negativeeffect import NegativeEffect
+            effect = NegativeEffect()
+            effect.apply_effect(self.get_current_canvas())
+
+        action = self.ui.toolBar.addAction('Negative')
+        action.triggered.connect(action_negative)
+
+
     def load_plugins(self):
         from pluginsloader import PluginsLoader
         # TODO: добавить application
         # TODO: проверить импортирование пакетов пакетов
-        loader = PluginsLoader(self.datasingleton)
+        loader = PluginsLoader(self.data_singleton)
         loader.enableOutput = True
         # TODO: список папок плагинов доставать из синглетона
         loader.load(['plugins'])
@@ -98,7 +108,7 @@ class MainWindow(QMainWindow, QObject):
         self.update_states()
 
     def new_tab(self):
-        canvas = Canvas(self.datasingleton)
+        canvas = Canvas(self.data_singleton)
         self.mUndoStackGroup.addStack(canvas.getUndoStack())
 
         scroll_area = QScrollArea()
@@ -162,7 +172,7 @@ class MainWindow(QMainWindow, QObject):
                 QMessageBox.warning(self, 'Внимание', str(e))
 
     def show_settings(self):
-        settings = Settings(self.datasingleton)
+        settings = Settings(self.data_singleton)
         settings.exec_()
 
     def can_undo_changed(self, enabled):
@@ -186,27 +196,27 @@ class MainWindow(QMainWindow, QObject):
     def read_settings(self):
         try:
             import json
-            with open(self.datasingleton.settings_path, 'r') as f:
+            with open(self.data_singleton.settings_path, 'r') as f:
                 data = json.load(f)
 
                 self.restoreGeometry(QByteArray.fromHex(data['MainWindow']['geometry']))
                 self.restoreState(QByteArray.fromHex(data['MainWindow']['state']))
 
-                self.datasingleton.from_serialize(data['Settings'])
+                self.data_singleton.from_serialize(data['Settings'])
         except Exception as e:
             print(e)
 
     def write_settings(self):
         try:
             import json
-            with open(self.datasingleton.settings_path, 'w') as f:
+            with open(self.data_singleton.settings_path, 'w') as f:
                 data = {
                     'MainWindow': {
                         'state': str(self.saveState().toHex()),
                         'geometry': str(self.saveGeometry().toHex()),
                     },
 
-                    'Settings': self.datasingleton.to_serialize(),
+                    'Settings': self.data_singleton.to_serialize(),
                 }
 
                 json.dump(data, f, sort_keys=True, indent=4, ensure_ascii=False)
