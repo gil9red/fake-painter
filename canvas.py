@@ -37,22 +37,13 @@ class Canvas(QWidget):
         self.mZoomFactor = 1.0
 
         self.mUndoStack = QUndoStack(self)
-        # TODO: брать из синглетона-настроек
-        # mUndoStack->setUndoLimit(DataSingleton::Instance()->getHistoryDepth());
-
-        # TODO: remove
-        # self.mInstrumentHandler = None
+        self.mUndoStack.setUndoLimit(self.datasingleton.image.history_depth)
 
         self.setMouseTracking(True)
 
-        # # TODO: ай-ай-ай
-        # # from pencilinstrument import PencilInstrument
-        # # self.mInstrumentHandler = PencilInstrument()
-        # # from rectangleinstrument import RectangleInstrument
-        # # self.mInstrumentHandler = RectangleInstrument()
-        # from lineinstrument import LineInstrument
-        # self.mInstrumentHandler = LineInstrument()
-        self.image = QImage(400, 400, QImage.Format_ARGB32_Premultiplied)
+        print(self.datasingleton.image.base_width, self.datasingleton.image.base_height)
+        self.image = QImage(self.datasingleton.image.base_width, self.datasingleton.image.base_height,
+                            QImage.Format_ARGB32_Premultiplied)
         self.image.fill(Qt.transparent)
 
         self.resize(self.image.rect().right() + 6,

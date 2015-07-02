@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Mon Jun  8 01:49:29 2015
+# Created: Thu Jul  2 14:36:54 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -65,8 +65,8 @@ class Ui_MainWindow(object):
         self.actionCopy.setObjectName("actionCopy")
         self.actionPaste = QtGui.QAction(MainWindow)
         self.actionPaste.setObjectName("actionPaste")
-        self.actionPreferences = QtGui.QAction(MainWindow)
-        self.actionPreferences.setObjectName("actionPreferences")
+        self.actionSettings = QtGui.QAction(MainWindow)
+        self.actionSettings.setObjectName("actionSettings")
         self.menuFile.addAction(self.actionNew)
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addSeparator()
@@ -81,7 +81,7 @@ class Ui_MainWindow(object):
         self.menuEdit.addAction(self.actionCopy)
         self.menuEdit.addAction(self.actionPaste)
         self.menuEdit.addSeparator()
-        self.menuEdit.addAction(self.actionPreferences)
+        self.menuEdit.addAction(self.actionSettings)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
         self.menubar.addAction(self.menuView.menuAction())
@@ -136,5 +136,5 @@ class Ui_MainWindow(object):
         self.actionPaste.setText(QtGui.QApplication.translate("MainWindow", "Вставить", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPaste.setToolTip(QtGui.QApplication.translate("MainWindow", "Вставить", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPaste.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+V", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionPreferences.setText(QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionSettings.setText(QtGui.QApplication.translate("MainWindow", "Settings", None, QtGui.QApplication.UnicodeUTF8))
 

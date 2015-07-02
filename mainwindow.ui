@@ -68,7 +68,7 @@
     <addaction name="actionCopy"/>
     <addaction name="actionPaste"/>
     <addaction name="separator"/>
-    <addaction name="actionPreferences"/>
+    <addaction name="actionSettings"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -218,9 +218,9 @@
     <string>Ctrl+V</string>
    </property>
   </action>
-  <action name="actionPreferences">
+  <action name="actionSettings">
    <property name="text">
-    <string>Preferences</string>
+    <string>Settings</string>
    </property>
   </action>
  </widget>

@@ -37,14 +37,15 @@ if __name__ == '__main__':
     # print('MAIN')
     # import datasingleton
     # print('datasingleton=', dir(datasingleton))
-    from datasingleton import DataSingleton
-
+    # from datasingleton import data_singleton
+    import datasingleton
+    # print(dir(datasingleton), dir())
     # print('datasingleton=', dir(datasingleton))
 
     # # mainWindow = MainWindow()
     # mainWindow = DataSingleton.mainWindow
     # mainWindow.show()
 
-    DataSingleton.mainWindow.show()
+    datasingleton.instance.mainWindow.show()
 
     sys.exit(app.exec_())

@@ -5,11 +5,15 @@
 # and is licensed under the MIT license, under the terms listed within
 # LICENSE which is included with the source of this package
 
+__author__ = 'ipetrash'
+
+
 from mainwindow_ui import Ui_MainWindow
 from PySide.QtGui import *
 from PySide.QtCore import *
+from settings import Settings
 
-from __old_pluginloader import PluginLoader
+# from __old_pluginloader import PluginLoader
 from canvas import Canvas
 
 
@@ -38,6 +42,8 @@ class MainWindow(QMainWindow, QObject):
         self.ui.actionNew.triggered.connect(self.new_tab)
         self.ui.actionOpen.triggered.connect(self.open)
 
+        self.ui.actionSettings.triggered.connect(self.show_settings)
+
         # TODO: Добавить в виде плагина
         # self.ui.actionPrint
 
@@ -58,9 +64,6 @@ class MainWindow(QMainWindow, QObject):
         # loader.load(['plugins'])
 
         # self.read_settings()
-
-        # TODO: удалить, пусть по умолчанию редактор пустой
-        self.new_tab()
 
         self.update_states()
 
@@ -189,6 +192,10 @@ class MainWindow(QMainWindow, QObject):
             except Exception as e:
                 QMessageBox.warning(self, 'Внимание', str(e))
 
+    def show_settings(self):
+        settings = Settings(self.datasingleton)
+        settings.exec_()
+
     def can_undo_changed(self, enabled):
         self.ui.actionUndo.setEnabled(enabled)
 
@@ -208,22 +215,51 @@ class MainWindow(QMainWindow, QObject):
         self.ui.actionRedo.setEnabled(enabled)
 
     def read_settings(self):
-        # # TODO: путь к файлу настроек брать из синглетона
-        ini = QSettings('settings.ini', QSettings.IniFormat)
-        self.restoreGeometry(ini.value('MainWindow_Geometry'))
-        self.restoreState(ini.value('MainWindow_State'))
+        # TODO: rem
+        # ini = QSettings('settings.ini', QSettings.IniFormat)
+        # self.restoreGeometry(ini.value('MainWindow_Geometry'))
+        # self.restoreState(ini.value('MainWindow_State'))
+
+        try:
+            import json
+            with open(self.datasingleton.settings_path, 'r') as f:
+                data = json.load(f)
+
+                self.restoreGeometry(QByteArray.fromHex(data['MainWindow']['geometry']))
+                self.restoreState(QByteArray.fromHex(data['MainWindow']['state']))
+
+                self.datasingleton.from_serialize(data['Settings'])
+        except Exception as e:
+            print(e)
 
     def write_settings(self):
-        # # TODO: путь к файлу настроек брать из синглетона
-        ini = QSettings('settings.ini', QSettings.IniFormat)
-        ini.setValue('MainWindow_State', self.saveState())
-        ini.setValue('MainWindow_Geometry', self.saveGeometry())
+        # TODO: rem
+        # ini = QSettings('settings.ini', QSettings.IniFormat)
+        # ini.setValue('MainWindow_State', self.saveState())
+        # ini.setValue('MainWindow_Geometry', self.saveGeometry())
+
+        try:
+            import json
+            with open(self.datasingleton.settings_path, 'w') as f:
+                data = {
+                    'MainWindow': {
+                        'state': str(self.saveState().toHex()),
+                        'geometry': str(self.saveGeometry().toHex()),
+                    },
+
+                    'Settings': self.datasingleton.to_serialize(),
+                }
+
+                json.dump(data, f, sort_keys=True, indent=4, ensure_ascii=False)
+        except Exception as e:
+            print(e)
 
     def closeEvent(self, *args, **kwargs):
         self.write_settings()
 
         # TODO: тут нужно закрывать все открытые вкладки
 
+        # TODO: спрашивать о том уверенности пользователя нужно с учетом флажка
         # reply = QtGui.QMessageBox.question(self, 'Message',
         #     "Are you sure to quit?", QtGui.QMessageBox.Yes |
         #     QtGui.QMessageBox.No, QtGui.QMessageBox.No)
