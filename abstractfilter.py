@@ -14,23 +14,23 @@ from undocommand import UndoCommand
 
 # TODO: может и версию добавить?
 
-class AbstractEffect(metaclass=ABCMeta):
-    """Abstract class for implementing effects."""
+class AbstractFilter(metaclass=ABCMeta):
+    """Abstract class for implementing filters."""
 
     @abstractproperty
     def name(self):
-        """Свойство должно возвращать имя эффекта"""
+        """Свойство должно возвращать имя фильтра"""
 
     @abstractproperty
     def description(self):
-        """Свойство должно возвращать всплывающую подсказку к эффекту"""
+        """Свойство должно возвращать всплывающую подсказку к фильтру"""
 
     @abstractproperty
     def icon(self):
-        """Свойство должно возвращать иконку эффекта"""
+        """Свойство должно возвращать иконку фильтра"""
 
     @abstractmethod
-    def apply_effect(self, canvas):
+    def apply_filter(self, canvas):
         """Функция вызывает воздействие на холст"""
 
     @staticmethod

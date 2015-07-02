@@ -8,24 +8,24 @@
 __author__ = 'ipetrash'
 
 
-from abstracteffect import AbstractEffect
+from abstractfilter import AbstractFilter
 from PySide.QtGui import QImage
 
 
-class NegativeEffect(AbstractEffect):
+class NegativeFilter(AbstractFilter):
     # def __init__(self):
     #     self.__icon = QIcon('plugins/baseinstruments/icons/line.png')
 
     def name(self):
-        return 'Negative Effect'
+        return 'Negative Filter'
 
     def description(self):
-        return 'Negative Effect'
+        return 'Negative Filter'
 
     def icon(self):
         return self.__icon
 
-    def apply_effect(self, canvas):
+    def apply_filter(self, canvas):
         # TODO: проверять canvas на Nоne, логировать
         # TODO: реализовать
         # canvas.clearSelection();

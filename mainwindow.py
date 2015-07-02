@@ -52,9 +52,9 @@ class MainWindow(QMainWindow, QObject):
 
         # TODO: перенести в плагин
         def action_negative():
-            from negativeeffect import NegativeEffect
-            effect = NegativeEffect()
-            effect.apply_effect(self.get_current_canvas())
+            from negativefilter import NegativeFilter
+            effect = NegativeFilter()
+            effect.apply_filter(self.get_current_canvas())
 
         action = self.ui.toolBar.addAction('Negative')
         action.triggered.connect(action_negative)
