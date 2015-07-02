@@ -49,9 +49,9 @@ class AbstractInstrument(metaclass=ABCMeta):
 
     @staticmethod
     def make_undo_command(canvas):
-        """
-        Creates UndoCommand & pushes it to UndoStack.
+        """Creates UndoCommand & pushes it to UndoStack.
         Base realisation simply save all image to UndoStack
+
         """
 
         canvas.pushUndoCommand(UndoCommand(canvas))
