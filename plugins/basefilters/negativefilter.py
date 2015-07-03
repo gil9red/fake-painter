@@ -23,7 +23,8 @@ class NegativeFilter(AbstractFilter):
         return 'Negative Filter'
 
     def icon(self):
-        return self.__icon
+        # return self.__icon
+        return None
 
     def apply_filter(self, canvas):
         # TODO: проверять canvas на Nоne, логировать
