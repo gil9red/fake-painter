@@ -19,21 +19,21 @@ class UndoCommand(QUndoCommand):
     def __init__(self, canvas, parent=None):
         super().__init__(parent)
 
-        self.mPrevImage = canvas.getImage().copy()
-        self.mCurrImage = canvas.getImage().copy()
+        self.mPrevImage = canvas.image.copy()
+        self.mCurrImage = canvas.image.copy()
         self.canvas = canvas
 
     def undo(self):
         # TODO: проверить и реализовать clearSelection
         # self.canvas.clearSelection()
-        self.mCurrImage = self.canvas.getImage().copy()
-        self.canvas.setImage(self.mPrevImage)
+        self.mCurrImage = self.canvas.image.copy()
+        self.canvas.image = self.mPrevImage
         self.canvas.update()
         # TODO: проверить и реализовать saveImageChanges
         # self.canvas.saveImageChanges()
 
     def redo(self):
-        self.canvas.setImage(self.mCurrImage)
+        self.canvas.image = self.mCurrImage
         self.canvas.update()
         # TODO: проверить и реализовать saveImageChanges
         # self.canvas.saveImageChanges()

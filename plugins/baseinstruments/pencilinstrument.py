@@ -55,7 +55,7 @@ class PencilInstrument(AbstractInstrument):
             canvas.setIsPaint(False)
 
     def paint(self, canvas, is_secondary_color=False, additional_flag=False):
-        painter = QPainter(canvas.getImage())
+        painter = QPainter(canvas.image)
         pen = QPen()
         # TODO: брать найстройки из класса-синглетона
         # pen.setWidth(DataSingleton::Instance()->getPenSize() * canvas.getZoomFactor())

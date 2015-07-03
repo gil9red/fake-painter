@@ -19,7 +19,7 @@ class Canvas(QWidget):
 
         self.data_singleton = data_singleton
 
-        self.image = QImage()
+        self._image = QImage()
         self.imageCopy = QImage()
         self.file_path = None
 
@@ -37,12 +37,10 @@ class Canvas(QWidget):
 
         self.setMouseTracking(True)
 
-        self.image = QImage(self.data_singleton.image.base_width, self.data_singleton.image.base_height,
-                            QImage.Format_ARGB32_Premultiplied)
-        self.image.fill(Qt.transparent)
-
-        self.resize(self.image.rect().right() + 6,
-                    self.image.rect().bottom() + 6)
+        im = QImage(self.data_singleton.image.base_width, self.data_singleton.image.base_height,
+                    QImage.Format_ARGB32_Premultiplied)
+        im.fill(Qt.transparent)
+        self.image = im
 
     # Send primary color for ToolBar.
     sendPrimaryColorView = Signal()
@@ -68,7 +66,7 @@ class Canvas(QWidget):
 
     def save(self, file_name):
         # Если не удалось сохранить
-        if not self.getImage().save(file_name):
+        if not self._image.save(file_name):
             raise Exception('Не удалось сохранить в "{}"'.format(file_name))
 
     def load(self, file_name):
@@ -79,7 +77,7 @@ class Canvas(QWidget):
         if not im.load(file_name):
             raise Exception('Не удалось загрузить из "{}"'.format(file_name))
 
-        self.setImage(im)
+        self.image = im
 
     def save(self):
         pass
@@ -105,12 +103,17 @@ class Canvas(QWidget):
         else:
             return "Untitled image"
 
-    def getImage(self):
-        return self.image
+    def getimage(self):
+        return self._image
 
-    def setImage(self, im):
-        self.image = im
+    def setimage(self, im):
+        self._image = im
+
+        corner = self.rect_bottom_right_corner()
+        self.resize(im.rect().right() + corner.width(), im.rect().bottom() + corner.height())
         self.update()
+
+    image = property(getimage, setimage)
 
     def setEdited(self, flag):
         self.mIsEdited = flag
@@ -192,7 +195,7 @@ class Canvas(QWidget):
         pass
 
     def rect_bottom_right_corner(self):
-        return QRect(self.image.rect().right(), self.image.rect().bottom(), 6, 6)
+        return QRect(self._image.rect().right(), self._image.rect().bottom(), 6, 6)
 
     def get_instrument(self):
         return self.data_singleton.current_instrument
@@ -251,12 +254,10 @@ class Canvas(QWidget):
                 # painter.setBrush(Qt.white)
                 painter.setBrush(QBrush(QPixmap("transparent.jpg")))
                 painter.drawRect(QRect(0, 0, width, height))
-                painter.drawImage(0, 0, self.getImage())
+                painter.drawImage(0, 0, self._image)
                 painter.end()
 
-                self.setImage(tempImage)
-                self.resize(self.getImage().rect().right() + 6,
-                            self.getImage().rect().bottom() + 6)
+                self.image = tempImage
                 self.setEdited(True)
                 self.clearSelection()
         elif self.rect_bottom_right_corner().contains(event.pos()):
@@ -290,10 +291,11 @@ class Canvas(QWidget):
         # TODO: иконки через ресурсы брать
         painter.setBrush(QBrush(QPixmap("transparent.jpg")))
         painter.drawRect(0, 0,
-                         self.image.rect().right() - 1,
-                         self.image.rect().bottom() - 1)
+                         self._image.rect().right() - 1,
+                         self._image.rect().bottom() - 1)
 
-        painter.drawImage(event.rect(), self.image, event.rect())
+        # painter.drawImage(event.rect(), self.image, event.rect())
+        painter.drawImage(self._image.rect(), self._image)
 
         painter.setBrush(Qt.black)
         painter.drawRect(self.rect_bottom_right_corner())
