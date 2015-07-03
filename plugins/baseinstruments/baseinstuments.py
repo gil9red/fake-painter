@@ -31,7 +31,7 @@ class PluginBaseInstruments(IPlugin):
         return '0.0.1'
 
     def description(self):
-        return 'Базовые инструменты'
+        return 'Base Instruments'
 
     def initialize(self):
         self.instruments.append(PencilInstrument())
@@ -48,6 +48,8 @@ class PluginBaseInstruments(IPlugin):
         mw.base_inst_action_group.setExclusive(True)
         mw.base_inst_action_group.triggered.connect(lambda x: self.triggered_action_instrument(x))
 
+        menu_instruments = mw.ui.menuInstruments
+
         for inst in self.instruments:
             act = base_inst_tool_bar.addAction(inst.icon(), inst.name())
             # TODO: objectName вида <class 'baseinstruments.rectangleinstrument.RectangleInstrument'>
@@ -58,6 +60,7 @@ class PluginBaseInstruments(IPlugin):
             act.setCheckable(True)
 
             mw.base_inst_action_group.addAction(act)
+            menu_instruments.addActions(mw.base_inst_action_group.actions())
             self.datasingleton.actionInstDict[act] = inst
 
     def triggered_action_instrument(self, action):
