@@ -8,18 +8,15 @@
 __author__ = 'ipetrash'
 
 
-# TODO: плагин импортирует инструменты и возвращает их список
-
 from iplugin import IPlugin
+# from abstractfilter import AbstractFilter
 from .negativefilter import NegativeFilter
 from .grayscalefilter import GrayscaleFilter
 from .swaprgbfilter import SwapRGBFilter
 
 from PySide.QtGui import *
-from PySide.QtCore import *
+# from PySide.QtCore import *
 
-
-# TODO: добавить автоматический поиск плагинов
 
 class PluginBaseFilters(IPlugin):
     def __init__(self, data_singleton):
@@ -36,6 +33,36 @@ class PluginBaseFilters(IPlugin):
         return 'Base Filters'
 
     def initialize(self):
+        extension = '.py'
+
+        # # TODO: сделать такое же динамическое импортирование у baseinstruments
+        # import os
+        # cur_dir = os.path.dirname(__file__)
+        # for file_name in os.listdir(cur_dir):
+        #     if file_name != '__init__.py' and file_name.endswith(extension):
+        #         modulename = file_name[: -len(extension)]
+        #         # Попытаться импортировать модуль
+        #         package = __import__(__package__ + "." + modulename)
+        #         module = getattr(package, modulename)
+        #
+        #         for obj in dir(module):
+        #             val = getattr(module, obj)
+        #             if obj.endswith('Filter') and obj != 'AbstractFilter':
+        #                 if issubclass(val, AbstractFilter):
+        #                     print(val)
+        #                     self.filters.append(val())
+        # print()
+
+        # for obj in AbstractFilter.__subclasses__():
+        #     print(obj)
+        #     self.filters.append(obj())
+
+        # import os
+        # cur_dir = os.path.dirname(__file__)
+        # for f in os.listdir(cur_dir):
+        #     print(f)
+        # print()
+
         self.filters.append(NegativeFilter())
         self.filters.append(GrayscaleFilter())
         self.filters.append(SwapRGBFilter())
