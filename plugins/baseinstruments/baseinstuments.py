@@ -12,6 +12,7 @@ from iplugin import IPlugin
 from .lineinstrument import LineInstrument
 from .pencilinstrument import PencilInstrument
 from .rectangleinstrument import RectangleInstrument
+from .eraserinstrument import EraserInstrument
 
 from PySide.QtGui import *
 from PySide.QtCore import *
@@ -34,6 +35,7 @@ class PluginBaseInstruments(IPlugin):
         return 'Base Instruments'
 
     def initialize(self):
+        self.instruments.append(EraserInstrument())
         self.instruments.append(PencilInstrument())
         self.instruments.append(LineInstrument())
         self.instruments.append(RectangleInstrument())
