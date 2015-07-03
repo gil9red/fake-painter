@@ -12,10 +12,14 @@ __author__ = 'ipetrash'
 
 from iplugin import IPlugin
 from .negativefilter import NegativeFilter
+from .grayscalefilter import GrayscaleFilter
+from .swaprgbfilter import SwapRGBFilter
 
 from PySide.QtGui import *
 from PySide.QtCore import *
 
+
+# TODO: добавить автоматический поиск плагинов
 
 class PluginBaseFilters(IPlugin):
     def __init__(self, data_singleton):
@@ -33,6 +37,8 @@ class PluginBaseFilters(IPlugin):
 
     def initialize(self):
         self.filters.append(NegativeFilter())
+        self.filters.append(GrayscaleFilter())
+        self.filters.append(SwapRGBFilter())
 
         mw = self.data_singleton.mainWindow
 
@@ -47,7 +53,6 @@ class PluginBaseFilters(IPlugin):
         menu_filters = mw.ui.menuFilters
 
         mw.base_filter_action_group = QActionGroup(menu_filters)
-        mw.base_filter_action_group.setExclusive(True)
         mw.base_filter_action_group.triggered.connect(lambda x: self.triggered_action_filter(x))
 
         for filter_ in self.filters:
@@ -59,7 +64,6 @@ class PluginBaseFilters(IPlugin):
             act.setToolTip(filter_.description())
             if filter_.icon():
                 act.setIcon(filter_.icon())
-            act.setCheckable(True)
 
             mw.base_filter_action_group.addAction(act)
             # menu_instruments.addActions(mw.base_inst_action_group.actions())
