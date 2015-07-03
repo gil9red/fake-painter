@@ -9,7 +9,6 @@ __author__ = 'ipetrash'
 
 
 from abstractfilter import AbstractFilter
-from PySide.QtGui import QImage
 
 
 class NegativeFilter(AbstractFilter):
@@ -32,6 +31,6 @@ class NegativeFilter(AbstractFilter):
         # canvas.clearSelection();
         self.make_undo_command(canvas)
 
-        canvas.getImage().invertPixels(QImage.InvertRgb)
+        canvas.getImage().invertPixels()
         canvas.setEdited(True)
         canvas.update()
