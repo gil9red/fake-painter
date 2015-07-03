@@ -7,10 +7,10 @@
 
 __author__ = 'ipetrash'
 
-
-from mainwindow_ui import Ui_MainWindow
 from PySide.QtGui import *
 from PySide.QtCore import *
+
+from mainwindow_ui import Ui_MainWindow
 from settings import Settings
 from canvas import Canvas
 
@@ -49,16 +49,6 @@ class MainWindow(QMainWindow, QObject):
         self.ui.tabWidget.tabCloseRequested.connect(self.close_tab)
 
         self.update_states()
-
-        # TODO: перенести в плагин
-        def action_negative():
-            from negativefilter import NegativeFilter
-            effect = NegativeFilter()
-            effect.apply_filter(self.get_current_canvas())
-
-        action = self.ui.toolBar.addAction('Negative')
-        action.triggered.connect(action_negative)
-
 
     def load_plugins(self):
         from pluginsloader import PluginsLoader

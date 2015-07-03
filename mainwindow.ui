@@ -85,10 +85,22 @@
      <string>Справка</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuInstruments">
+    <property name="title">
+     <string>Instruments</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuFilters">
+    <property name="title">
+     <string>Filters</string>
+    </property>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuImage"/>
+   <addaction name="menuInstruments"/>
+   <addaction name="menuFilters"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
