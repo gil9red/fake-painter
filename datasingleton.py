@@ -18,9 +18,10 @@ class DataSingleton:
     """
 
     def __init__(self):
-        self.currentInstrument = None
-        self.actionInstDict = {}
+        self.current_instrument = None
+        self.action_inst_dict = {}
         # self.instActionDict = {}
+        self.action_filter_dict = {}
 
         self.settings_path = 'settings.cfg'
 

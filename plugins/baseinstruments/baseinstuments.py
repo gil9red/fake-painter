@@ -51,18 +51,19 @@ class PluginBaseInstruments(IPlugin):
         menu_instruments = mw.ui.menuInstruments
 
         for inst in self.instruments:
-            act = base_inst_tool_bar.addAction(inst.icon(), inst.name())
+            act = base_inst_tool_bar.addAction(inst.name())
             # TODO: objectName вида <class 'baseinstruments.rectangleinstrument.RectangleInstrument'>
             # кажется неудобным, может другое значение составлять
             act.setObjectName(str(type(inst)))
             act.setToolTip(inst.description())
-            act.setIcon(inst.icon())
+            if inst.icon():
+                act.setIcon(inst.icon())
             act.setCheckable(True)
 
             mw.base_inst_action_group.addAction(act)
             menu_instruments.addActions(mw.base_inst_action_group.actions())
-            self.datasingleton.actionInstDict[act] = inst
+            self.datasingleton.action_inst_dict[act] = inst
 
     def triggered_action_instrument(self, action):
-        instrument = self.datasingleton.actionInstDict[action]
-        self.datasingleton.currentInstrument = instrument
+        instrument = self.datasingleton.action_inst_dict[action]
+        self.datasingleton.current_instrument = instrument

@@ -195,7 +195,7 @@ class Canvas(QWidget):
         return QRect(self.image.rect().right(), self.image.rect().bottom(), 6, 6)
 
     def get_instrument(self):
-        return self.data_singleton.currentInstrument
+        return self.data_singleton.current_instrument
 
     def mousePressEvent(self, event):
         if event.buttons() == Qt.LeftButton and self.rect_bottom_right_corner().contains(event.pos()):
