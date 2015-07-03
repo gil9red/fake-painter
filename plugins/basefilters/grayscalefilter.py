@@ -32,7 +32,7 @@ class GrayscaleFilter(AbstractFilter):
         # canvas.clearSelection();
         self.make_undo_command(canvas)
 
-        im = canvas.getImage()
+        im = canvas.image
 
         for y in range(im.height()):
             for x in range(im.width()):

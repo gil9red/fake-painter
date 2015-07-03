@@ -31,8 +31,7 @@ class SwapRGBFilter(AbstractFilter):
         # canvas.clearSelection();
         self.make_undo_command(canvas)
 
-        im = canvas.getImage().rgbSwapped()
-        canvas.setImage(im)
+        im = canvas.image.rgbSwapped()
+        canvas.image = im
 
         canvas.setEdited(True)
-        canvas.update()
