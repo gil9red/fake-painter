@@ -60,9 +60,9 @@ class MainWindow(QMainWindow, QObject):
         loader.load(['plugins'])
 
         # TODO: rem
-        print()
+        print('Plugins:')
         for plugin in loader.plugins():
-            print(plugin)
+            print('  ', plugin)
 
     def update_states(self):
         title = 'Empty'

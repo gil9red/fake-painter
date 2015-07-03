@@ -11,6 +11,7 @@ from PySide.QtGui import QApplication
 import sys
 
 
+# TODO: set/get методы заменить на свойства
 # TODO: логирование https://docs.python.org/3.4/library/logging.html
 
 # TODO: сделать скрипт, который проверял бы код
