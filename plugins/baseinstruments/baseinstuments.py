@@ -8,8 +8,6 @@
 __author__ = 'ipetrash'
 
 
-# TODO: плагин импортирует инструменты и возвращает их список
-
 from iplugin import IPlugin
 from .lineinstrument import LineInstrument
 from .pencilinstrument import PencilInstrument
@@ -18,10 +16,12 @@ from .rectangleinstrument import RectangleInstrument
 from PySide.QtGui import *
 from PySide.QtCore import *
 
+# TODO: добавить автоматический поиск плагинов
+
 
 class PluginBaseInstruments(IPlugin):
-    def __init__(self, datasingleton):
-        self.datasingleton = datasingleton
+    def __init__(self, data_singleton):
+        self.data_singleton = data_singleton
         self.instruments = []
 
     def name(self):
@@ -38,7 +38,7 @@ class PluginBaseInstruments(IPlugin):
         self.instruments.append(LineInstrument())
         self.instruments.append(RectangleInstrument())
 
-        mw = self.datasingleton.mainWindow
+        mw = self.data_singleton.mainWindow
 
         base_inst_tool_bar = mw.addToolBar(self.description())
         base_inst_tool_bar.setObjectName(self.name())
@@ -62,8 +62,8 @@ class PluginBaseInstruments(IPlugin):
 
             mw.base_inst_action_group.addAction(act)
             menu_instruments.addActions(mw.base_inst_action_group.actions())
-            self.datasingleton.action_inst_dict[act] = inst
+            self.data_singleton.action_inst_dict[act] = inst
 
     def triggered_action_instrument(self, action):
-        instrument = self.datasingleton.action_inst_dict[action]
-        self.datasingleton.current_instrument = instrument
+        instrument = self.data_singleton.action_inst_dict[action]
+        self.data_singleton.current_instrument = instrument
