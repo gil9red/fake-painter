@@ -95,12 +95,19 @@
      <string>Filters</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionPlugin_Manager"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuImage"/>
    <addaction name="menuInstruments"/>
    <addaction name="menuFilters"/>
+   <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -233,6 +240,11 @@
   <action name="actionSettings">
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionPlugin_Manager">
+   <property name="text">
+    <string>Plugin Manager</string>
    </property>
   </action>
  </widget>

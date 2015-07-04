@@ -12,7 +12,10 @@ from PySide.QtCore import *
 
 from mainwindow_ui import Ui_MainWindow
 from settings import Settings
+from pluginmanager import PluginManager
 from canvas import Canvas
+from pluginsloader import PluginsLoader
+
 
 
 class MainWindow(QMainWindow, QObject):
@@ -42,6 +45,8 @@ class MainWindow(QMainWindow, QObject):
 
         self.ui.actionSettings.triggered.connect(self.show_settings)
 
+        self.ui.actionPlugin_Manager.triggered.connect(self.show_plugin_manager)
+
         # TODO: Добавить в виде плагина
         # self.ui.actionPrint
 
@@ -51,7 +56,6 @@ class MainWindow(QMainWindow, QObject):
         self.update_states()
 
     def load_plugins(self):
-        from pluginsloader import PluginsLoader
         # TODO: добавить application
         # TODO: проверить импортирование пакетов пакетов
         loader = PluginsLoader(self.data_singleton)
@@ -164,6 +168,10 @@ class MainWindow(QMainWindow, QObject):
     def show_settings(self):
         settings = Settings(self.data_singleton)
         settings.exec_()
+
+    def show_plugin_manager(self):
+        plugin_manager = PluginManager(self.data_singleton)
+        plugin_manager.exec_()
 
     def can_undo_changed(self, enabled):
         self.ui.actionUndo.setEnabled(enabled)
