@@ -6,32 +6,28 @@ import sys
 
 from iplugin import IPlugin
 
-# TODO: брать из синглетона-настроек
-# from outwiker.gui.guiconfig import PluginsConfig
-
 
 class PluginsLoader:
-    """
-    Класс для загрузки плагинов
-    """
-    def __init__(self, datasingleton):
-        self.datasingleton = datasingleton
+    """Класс для загрузки плагинов"""
+
+    def __init__(self, data_singleton):
+        self.data_singleton = data_singleton
 
         # Словарь с загруженными плагинами
         # Ключ - имя плагина
         # Значение - экземпляр плагина
-        self.__plugins = {}
+        self._plugins = {}
 
         # Словарь с плагинами, которые были отключены пользователем
         # Ключ - имя плагина
         # Значение - экземпляр плагина
-        self.__disabled_plugins = {}
+        self._disabled_plugins = {}
 
         # Пути, где ищутся плагины
-        self.__dirlist = []
+        self._dir_list = []
 
         # Имя классов плагинов должно начинаться с "Plugins"
-        self.__pluginsStartName = "Plugin"
+        self._pluginsStartName = "Plugin"
 
         # Установить в False, если не нужно выводить ошибки(например, в тестах)
         self.enableOutput = True
@@ -42,113 +38,108 @@ class PluginsLoader:
 
     @property
     def disabled_plugins(self):
-        """
-        Возвращает список отключенных плагинов
-        """
-        return self.__disabled_plugins
+        """Возвращает список отключенных плагинов"""
+
+        return self._disabled_plugins
 
     def update_disable_list(self):
         """
         Обновление состояния плагинов. Одни отключить, другие включить
         """
 
-        # TODO: брать из синглетона-настроек
-        # options = PluginsConfig(self.__application.config)
-        #
-        # # Пройтись по включенным плагинам и отключить те,
-        # # что попали в черный список
-        # self.__disableEnabledPlugins(options.disabledPlugins.value)
-        #
-        # # Пройтись по отключенным плагинам и включить те,
-        # # что не попали в "черный список"
-        # self.__enableDisabledPlugins(options.disabledPlugins.value)
+        # Пройтись по включенным плагинам и отключить те,
+        # что попали в черный список
+        self._disable_enabled_plugins(self.data_singleton.disabled_plugins)
 
-    def __disable_enabled_plugins(self, disable_list):
-        """
-        Отключить загруженные плагины, попавшие в "черный список"(disableList)
-        """
-        for pluginname in disable_list:
-            if pluginname in self.__plugins.keys():
-                self.__plugins[pluginname].destroy()
+        # Пройтись по отключенным плагинам и включить те,
+        # что не попали в "черный список"
+        self._enable_disabled_plugins(self.data_singleton.disabled_plugins)
 
-                assert pluginname not in self.__disabled_plugins
-                self.__disabled_plugins[pluginname] = self.__plugins[pluginname]
-                del self.__plugins[pluginname]
+    def _disable_enabled_plugins(self, disable_list):
+        """Отключить загруженные плагины, попавшие в "черный список" (disableList)"""
 
-    def __enable_disabled_plugins(self, disable_list):
-        """
-        Включить отключенные плагины, если их больше нет в "черном списке"
-        """
-        for plugin in self.__disabled_plugins.values():
+        for plugin_name in disable_list:
+            if plugin_name in self._plugins.keys():
+                self._plugins[plugin_name].destroy()
+
+                assert plugin_name not in self._disabled_plugins
+                self._disabled_plugins[plugin_name] = self._plugins[plugin_name]
+                del self._plugins[plugin_name]
+
+    def _enable_disabled_plugins(self, disable_list):
+        """Включить отключенные плагины, если их больше нет в "черном списке"""
+
+        for plugin in self._disabled_plugins.values():
             if plugin.name not in disable_list:
                 plugin.initialize()
 
-                assert plugin.name not in self.__plugins
-                self.__plugins[plugin.name] = plugin
+                assert plugin.name not in self._plugins
+                self._plugins[plugin.name] = plugin
 
-                del self.__disabled_plugins[plugin.name]
+                del self._disabled_plugins[plugin.name]
 
-    def load(self, dirlist):
-        """
-        Загрузить плагины из указанных директорий.
+    def load(self, dir_list):
+        """Загрузить плагины из указанных директорий.
         Каждый вызов метода load() добавляет плагины в список загруженных плагинов, не очищая его
-        dirlist - список директорий, где могут располагаться плагины. Каждый плагин расположен в своей поддиректории
-        """
-        assert dirlist is not None
+        dir_list - список директорий, где могут располагаться плагины. Каждый плагин расположен в своей поддиректории
 
-        for currentDir in dirlist:
+        """
+
+        assert dir_list is not None
+
+        for currentDir in dir_list:
             if os.path.exists(currentDir):
-                dirPackets = sorted(os.listdir(currentDir))
+                dir_packets = sorted(os.listdir(currentDir))
 
                 # Добавить путь до currentDir в sys.path
-                fullpath = os.path.abspath(currentDir)
+                full_path = os.path.abspath(currentDir)
 
                 # TODO: странное место
                 syspath = [item for item in sys.path]
 
-                if fullpath not in syspath:
-                    sys.path.insert(0, fullpath)
+                if full_path not in syspath:
+                    sys.path.insert(0, full_path)
 
                 # Все поддиректории попытаемся открыть как пакеты
-                self.__import_modules(currentDir, dirPackets)
+                self._import_modules(currentDir, dir_packets)
 
     def clear(self):
-        """
-        Уничтожить все загруженные плагины
-        """
-        map(lambda plugin: plugin.destroy(), self.__plugins.values())
-        self.__plugins = {}
+        """Уничтожить все загруженные плагины"""
 
-    def __import_modules(self, baseDir, dir_packages_list):
-        """
-        Попытаться импортировать пакеты
+        map(lambda plugin: plugin.destroy(), self._plugins.values())
+        self._plugins = {}
+
+    def _import_modules(self, base_dir, dir_packages_list):
+        """Попытаться импортировать пакеты
         baseDir - директория, где расположены пакеты
         dirPackagesList - список директорий(только имена директорий), возможно являющихся пакетами
+
         """
+
         assert dir_packages_list is not None
 
         for packageName in dir_packages_list:
             if packageName == '__pycache__':
                 continue
 
-            packagePath = os.path.join(baseDir, packageName)
+            package_path = os.path.join(base_dir, packageName)
 
             # TODO: если проверять на файл, то можно импортировать одиночные модули
             # Проверить, что это директория
-            if os.path.isdir(packagePath):
+            if os.path.isdir(package_path):
                 # Список строк, описывающий возникшие ошибки во время импортирования
                 # Выводятся только если не удалось импортировать ни одного модуля
                 errors = []
 
                 # Количество загруженных плагинов до импорта нового
-                oldPluginsCount = len(self.__plugins) + len(self.__disabled_plugins)
+                old_plugins_count = len(self._plugins) + len(self._disabled_plugins)
 
                 # Переберем все файлы внутри packagePath
                 # и попытаемся их импортировать
-                for fileName in sorted(os.listdir(packagePath)):
+                for fileName in sorted(os.listdir(package_path)):
                     module = self._import_single_module(packageName, fileName)
                     if module is not None:
-                        self.__load_plugin(module)
+                        self._load_plugin(module)
 
                     # try:
                     #     module = self._import_single_module(packageName, fileName)
@@ -163,18 +154,17 @@ class PluginsLoader:
                     #                                    error=str(e)))
 
                 # Проверим, удалось ли загрузить плагин
-                newPluginsCount = len(self.__plugins) + len(self.__disabled_plugins)
+                new_plugins_count = len(self._plugins) + len(self._disabled_plugins)
 
                 # Вывод ошибок, если ни одного плагина из пакета не удалось
                 # импортировать
-                if newPluginsCount == oldPluginsCount and len(errors) != 0:
+                if new_plugins_count == old_plugins_count and len(errors) != 0:
                     self._print(u"\n\n".join(errors))
                     self._print(u"**********\n")
 
-    def _import_single_module(self, package_name, file_name):
-        """
-        Импортировать один модуль по имени пакета и файла с модулем
-        """
+    @staticmethod
+    def _import_single_module(package_name, file_name):
+        """Импортировать один модуль по имени пакета и файла с модулем"""
 
         # TODO: проверить импортирование таких модулей: '.pyс' или '.pyo'
         # Модуль может загружаться из файлов с расширением '.pyс' или '.pyo', даже если нет файла
@@ -185,42 +175,33 @@ class PluginsLoader:
 
         # Проверим, что файл может быть модулем
         if file_name.endswith(extension) and file_name != "__init__.py":
-            modulename = file_name[: -len(extension)]
+            module_name = file_name[: -len(extension)]
             # Попытаться импортировать модуль
-            package = __import__(package_name + "." + modulename)
-            result = getattr(package, modulename)
+            package = __import__(package_name + "." + module_name)
+            result = getattr(package, module_name)
 
         return result
 
-    def __load_plugin(self, module):
-        """
-        Найти классы плагинов и создать их экземпляры
-        """
-        assert module is not None
+    def _load_plugin(self, module):
+        """Найти классы плагинов и создать их экземпляры"""
 
-        # TODO: брать из синглетона-настроек
-        # options = PluginsConfig(self.__application.config)
-        #
-        # for name in dir(module):
-        #     self.__createObject(module,
-        #                          name,
-        #                          options.disabledPlugins.value)
+        assert module is not None
 
         # Перебираем список объектов в модуле
         for name in dir(module):
-            self.__create_object(module,
-                                 name,
-                                 # TODO: временно! заменить работающим аналогом
-                                 [])
+            self._create_object(module,
+                                name,
+                                self.data_singleton.disabled_plugins)
 
-    def __create_object(self, module, name, disabled_plugins):
-        """
-        Попытаться загрузить класс, возможно, это плагин
+    def _create_object(self, module, name, disabled_plugins):
+        """Попытаться загрузить класс, возможно, это плагин
 
         module - модуль, откуда загружается класс
         name - имя класса потенциального плагина
+
         """
-        if name.startswith(self.__pluginsStartName):
+
+        if name.startswith(self._pluginsStartName):
             obj = getattr(module, name)
             if obj not in IPlugin.__subclasses__():
                 return
@@ -229,23 +210,23 @@ class PluginsLoader:
             #     return
 
             # Создаем плагин, и в его конструктор передаем datasingleton
-            plugin = obj(self.datasingleton)
-            if not self.__is_new_plugin(plugin.name):
+            plugin = obj(self.data_singleton)
+            if not self._is_new_plugin(plugin.name):
                 return
 
             if plugin.name not in disabled_plugins:
                 plugin.initialize()
-                self.__plugins[plugin.name] = plugin
+                self._plugins[plugin.name] = plugin
             else:
-                self.__disabled_plugins[plugin.name] = plugin
+                self._disabled_plugins[plugin.name] = plugin
 
-    def __is_new_plugin(self, pluginname):
+    def _is_new_plugin(self, plugin_name):
+        """Проверка того, что плагин с таким именем еще не был загружен
+        plugin_name - плагин, который надо проверить
+
         """
-        Проверка того, что плагин с таким именем еще не был загружен
-        newplugin - плагин, который надо проверить
-        """
-        return(pluginname not in self.__plugins and
-                pluginname not in self.__disabled_plugins)
+        return(plugin_name not in self._plugins and
+               plugin_name not in self._disabled_plugins)
 
     def plugins(self):
-        return self.__plugins.values()
+        return self._plugins.values()
