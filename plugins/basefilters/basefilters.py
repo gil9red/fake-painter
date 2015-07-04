@@ -33,8 +33,8 @@ class PluginBaseFilters(IPlugin):
         return 'Base Filters'
 
     def initialize(self):
-        extension = '.py'
-
+        # extension = '.py'
+        #
         # # TODO: сделать такое же динамическое импортирование у baseinstruments
         # import os
         # cur_dir = os.path.dirname(__file__)
@@ -95,6 +95,10 @@ class PluginBaseFilters(IPlugin):
             mw.base_filter_action_group.addAction(act)
             # menu_instruments.addActions(mw.base_inst_action_group.actions())
             self.data_singleton.action_filter_dict[act] = filter_
+
+    def destroy(self):
+        # TODO: поддержать
+        pass
 
     def triggered_action_filter(self, action):
         mw = self.data_singleton.mainWindow

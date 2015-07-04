@@ -66,6 +66,10 @@ class PluginBaseInstruments(IPlugin):
             menu_instruments.addActions(mw.base_inst_action_group.actions())
             self.data_singleton.action_inst_dict[act] = inst
 
+    def destroy(self):
+        # TODO: поддержать
+        pass
+
     def triggered_action_instrument(self, action):
         instrument = self.data_singleton.action_inst_dict[action]
         self.data_singleton.current_instrument = instrument

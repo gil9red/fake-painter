@@ -28,5 +28,9 @@ class IPlugin(metaclass=ABCMeta):
     def initialize(self, *args, **kwargs):
         """"""
 
+    @abstractmethod
+    def destroy(self):
+        """"""
+
     # def __str__(self):
     #     return '{} ({})'.format(self.name(), self.version())
