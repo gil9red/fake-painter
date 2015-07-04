@@ -9,7 +9,7 @@ __author__ = 'ipetrash'
 
 
 from mainwindow import MainWindow
-import json
+# import json
 
 
 class DataSingleton:
@@ -22,6 +22,8 @@ class DataSingleton:
         self.action_inst_dict = {}
         # self.instActionDict = {}
         self.action_filter_dict = {}
+
+        self.disabled_plugins = []
 
         self.settings_path = 'settings.cfg'
 
@@ -43,12 +45,13 @@ class DataSingleton:
         self.settings_path = data['settings_path']
         self.image.from_serialize(data['image'])
 
-    def to_json(self):
-        return json.dumps(self.to_serialize(), indent=4)
-
-    def from_json(self, json_str):
-        data = json.loads(json_str)
-        self.from_serialize(data)
+    # TODO: rem
+    # def to_json(self):
+    #     return json.dumps(self.to_serialize(), indent=4)
+    #
+    # def from_json(self, json_str):
+    #     data = json.loads(json_str)
+    #     self.from_serialize(data)
 
     class Image:
         def __init__(self):
