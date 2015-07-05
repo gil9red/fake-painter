@@ -1,4 +1,32 @@
-# -*- coding: UTF-8 -*-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Author: Eugeniy Ilin (aka Jenyay) <jenyay.ilin@gmail.com>
+# Copyright: 2010, Eugeniy Ilin (aka Jenyay)
+#
+# Author: Ilya Petrash (aka gil9red) <ip1992@inbox.ru>
+# Copyright (c) 2015 Ilya Petrash
+#
+# License: GPL3
+#    This package is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This package is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this package; if not, see .
+#
+# On Debian systems, the complete text of the GNU General
+# Public License can be found in 'http://www.gnu.org/licenses/gpl.html'.
+
+
+__author__ = 'ipetrash'
+
 
 import os
 import os.path
@@ -26,7 +54,7 @@ class PluginsLoader:
         # Пути, где ищутся плагины
         self._dir_list = []
 
-        # Имя классов плагинов должно начинаться с "Plugins"
+        # Имя классов плагинов должно начинаться с "Plugin"
         self._pluginsStartName = "Plugin"
 
         # Установить в False, если не нужно выводить ошибки(например, в тестах)
