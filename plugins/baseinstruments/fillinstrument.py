@@ -59,8 +59,6 @@ class FillInstrument(AbstractInstrument):
         pixel = canvas.image.pixel(x, y)
         old_color = QColor(pixel)
 
-        transparent = QColor(Qt.transparent).rgba()
-        print(switch_color, old_color, transparent)
         if switch_color != old_color:
             self.fill_recurs(x, y,
                              switch_color.rgb(), old_color.rgb(),
