@@ -47,9 +47,6 @@ class MainWindow(QMainWindow, QObject):
 
         self.ui.actionPlugin_Manager.triggered.connect(self.show_plugin_manager)
 
-        # TODO: Добавить в виде плагина
-        # self.ui.actionPrint
-
         self.ui.tabWidget.currentChanged.connect(self.activate_tab)
         self.ui.tabWidget.tabCloseRequested.connect(self.close_tab)
 

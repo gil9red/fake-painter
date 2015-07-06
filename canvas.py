@@ -19,7 +19,6 @@ class Canvas(QWidget):
 
         self.data_singleton = data_singleton
 
-        self._image = QImage()
         self.imageCopy = QImage()
         self.file_path = None
 
@@ -40,6 +39,7 @@ class Canvas(QWidget):
         im = QImage(self.data_singleton.image.base_width, self.data_singleton.image.base_height,
                     QImage.Format_ARGB32_Premultiplied)
         im.fill(Qt.transparent)
+        self._image = None
         self.image = im
 
     # Send primary color for ToolBar.
@@ -73,11 +73,11 @@ class Canvas(QWidget):
         self.file_path = file_name
         im = QImage()
 
-        # Если не удалось сохранить
+        # Если не удалось загрузить
         if not im.load(file_name):
             raise Exception('Не удалось загрузить из "{}"'.format(file_name))
 
-        self.image = im
+        self.image = im.convertToFormat(QImage.Format_ARGB32_Premultiplied)
 
     def save(self):
         pass
