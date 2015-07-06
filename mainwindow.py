@@ -52,6 +52,8 @@ class MainWindow(QMainWindow, QObject):
 
         self.update_states()
 
+    send_cursor_pos = Signal(int, int)
+
     def load_plugins(self):
         # TODO: добавить application
         # TODO: проверить импортирование пакетов пакетов
@@ -123,6 +125,9 @@ class MainWindow(QMainWindow, QObject):
         # mSizeLabel->setText(QString("%1 x %2").arg(size.width()).arg(size.height()));
 
         canvas = self.get_current_canvas()
+
+        canvas.send_cursor_pos.connect(self.send_cursor_pos)
+
         self.mUndoStackGroup.setActiveStack(canvas.getUndoStack())
 
         self.update_states()

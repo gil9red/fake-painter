@@ -39,6 +39,7 @@ class Canvas(QWidget):
         im = QImage(self.data_singleton.image.base_width, self.data_singleton.image.base_height,
                     QImage.Format_ARGB32_Premultiplied)
         im.fill(Qt.transparent)
+        # im.fill(Qt.white)
         self._image = None
         self.image = im
 
@@ -49,7 +50,7 @@ class Canvas(QWidget):
     sendSecondaryColorView = Signal()
 
     sendNewImageSize = Signal()
-    sendCursorPos = Signal()
+    send_cursor_pos = Signal(int, int)
     sendColor = Signal()
 
     # Send signal to restore previous checked instrument for ToolBar.
@@ -243,13 +244,16 @@ class Canvas(QWidget):
         #     mInstrumentHandler->mouseMoveEvent(event, *this);
         # }
 
+        x, y = event.pos().x(), event.pos().y()
+
+        self.send_cursor_pos.emit(x, y)
+
         if self.m_is_resize:
-            width = event.pos().x()
-            height = event.pos().y()
+            width, height = x, y
 
             if width > 1 or height > 1:
-                tempImage = QImage(width, height, QImage.Format_ARGB32_Premultiplied)
-                painter = QPainter(tempImage)
+                temp_image = QImage(width, height, QImage.Format_ARGB32_Premultiplied)
+                painter = QPainter(temp_image)
                 painter.setPen(Qt.NoPen)
                 # painter.setBrush(Qt.white)
                 painter.setBrush(QBrush(QPixmap("transparent.jpg")))
@@ -257,9 +261,10 @@ class Canvas(QWidget):
                 painter.drawImage(0, 0, self._image)
                 painter.end()
 
-                self.image = tempImage
+                self.image = temp_image
                 self.setEdited(True)
                 self.clearSelection()
+
         elif self.rect_bottom_right_corner().contains(event.pos()):
             self.setCursor(Qt.SizeFDiagCursor)
         else:
