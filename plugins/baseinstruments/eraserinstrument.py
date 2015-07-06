@@ -15,7 +15,8 @@ from PySide.QtCore import *
 
 class EraserInstrument(AbstractInstrument):
     def __init__(self):
-        self.__icon = QIcon('plugins/baseinstruments/icons/lastic.png')
+        self._icon = QIcon('plugins/baseinstruments/icons/lastic.png')
+        self._transparent = QColor(Qt.transparent).rgba()
 
     def name(self):
         return 'Eraser Instrument'
@@ -24,7 +25,7 @@ class EraserInstrument(AbstractInstrument):
         return 'Eraser Instrument'
 
     def icon(self):
-        return self.__icon
+        return self._icon
 
     def mouse_press_event(self, event, canvas):
         self.mStartPoint = event.pos()
@@ -46,22 +47,31 @@ class EraserInstrument(AbstractInstrument):
             canvas.setIsPaint(False)
 
     def paint(self, canvas, is_secondary_color=False, additional_flag=False):
-        painter = QPainter(canvas.image)
-        # TODO: оставлять после ластика ничего -- должен быть виден задний фон
-        # painter.setPen(QPen(Qt.transparent,
-        painter.setPen(QPen(Qt.white,
-                            # TODO: брать найстройки из класса-синглетона
-                            # DataSingleton::Instance()->getPenSize() * imageArea.getZoomFactor(),
-                            2.0,
-                            Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+        # TODO: рефакторинг
+        # TODO: поддержка разных размеров
+        x, y = self.mStartPoint.x(), self.mStartPoint.y()
 
-        if self.mStartPoint != self.mEndPoint:
-            painter.drawLine(self.mStartPoint, self.mEndPoint)
+        for i in range(-20, 20):
+            for j in range(-20, 20):
+                if x + i < canvas.image.width() and y + j < canvas.image.height() and x + i >= 0 and y + j >= 0:
+                    canvas.image.setPixel(x + i, y + j, self._transparent)
 
-        if self.mStartPoint == self.mEndPoint:
-            painter.drawPoint(self.mStartPoint)
-
-        painter.end()
+        # painter = QPainter(canvas.image)
+        # # TODO: оставлять после ластика ничего -- должен быть виден задний фон
+        # # painter.setPen(QPen(Qt.transparent,
+        # painter.setPen(QPen(Qt.white,
+        #                     # TODO: брать найстройки из класса-синглетона
+        #                     # DataSingleton::Instance()->getPenSize() * imageArea.getZoomFactor(),
+        #                     2.0,
+        #                     Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+        #
+        # if self.mStartPoint != self.mEndPoint:
+        #     painter.drawLine(self.mStartPoint, self.mEndPoint)
+        #
+        # if self.mStartPoint == self.mEndPoint:
+        #     painter.drawPoint(self.mStartPoint)
+        #
+        # painter.end()
 
         canvas.setEdited(True)
         canvas.update()
