@@ -12,6 +12,7 @@ from undocommand import UndoCommand
 
 
 # TODO: может и версию добавить?
+# TODO: добавить метод, возвращающий иконку инструмента
 
 class AbstractInstrument(metaclass=ABCMeta):
     def __init__(self):
