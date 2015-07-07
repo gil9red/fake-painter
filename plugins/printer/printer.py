@@ -9,13 +9,14 @@ __author__ = 'ipetrash'
 
 
 from iplugin import IPlugin
-from PySide.QtGui import *
+from PySide.QtGui import QPrinter, QPrintDialog, QDialog, QPainter
 
 
 class PluginPrinter(IPlugin):
     def __init__(self, data_singleton):
         self.data_singleton = data_singleton
 
+        self.mw = self.data_singleton.mainWindow
         self.actionPrint = None
         self.actionSep = None
 
@@ -29,26 +30,26 @@ class PluginPrinter(IPlugin):
         return 'Printer'
 
     def initialize(self):
-        mw = self.data_singleton.mainWindow
-
-        self.actionPrint = mw.ui.menuFile.addAction('Print')
-        mw.ui.menuFile.insertAction(mw.ui.actionQuit, self.actionPrint)
-        self.actionSep = mw.ui.menuFile.insertSeparator(mw.ui.actionQuit)
+        self.actionPrint = self.mw.ui.menuFile.addAction('Print')
+        self.mw.ui.menuFile.insertAction(self.mw.ui.actionQuit, self.actionPrint)
+        self.actionSep = self.mw.ui.menuFile.insertSeparator(self.mw.ui.actionQuit)
 
         self.actionPrint.triggered.connect(lambda: self.print_())
 
     def destroy(self):
-        # TODO: поддержать
-        pass
+        self.mw.ui.menuFile.removeAction(self.actionPrint)
+        self.mw.ui.menuFile.removeAction(self.actionSep)
+
+        self.actionPrint = None
+        self.actionSep = None
 
     def print_(self):
-        mw = self.data_singleton.mainWindow
-        canvas = mw.get_current_canvas()
+        canvas = self.mw.get_current_canvas()
         if not canvas:
             return
 
         printer = QPrinter()
-        dlg = QPrintDialog(printer, mw)
+        dlg = QPrintDialog(printer, self.mw)
         if dlg.exec_() == QDialog.Accepted:
             painter = QPainter(printer)
             painter.drawImage(0, 0, canvas.image)
