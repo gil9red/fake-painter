@@ -49,7 +49,7 @@ class Canvas(QWidget):
     # Send secondary color for ToolBar.
     sendSecondaryColorView = Signal()
 
-    sendNewImageSize = Signal()
+    send_new_image_size = Signal(int, int)
     send_cursor_pos = Signal(int, int)
     sendColor = Signal()
 
@@ -104,17 +104,17 @@ class Canvas(QWidget):
         else:
             return "Untitled image"
 
-    def getimage(self):
+    def get_image(self):
         return self._image
 
-    def setimage(self, im):
+    def set_image(self, im):
         self._image = im
 
         corner = self.rect_bottom_right_corner()
         self.resize(im.rect().right() + corner.width(), im.rect().bottom() + corner.height())
         self.update()
 
-    image = property(getimage, setimage)
+    image = property(get_image, set_image)
 
     def setEdited(self, flag):
         self.mIsEdited = flag
@@ -255,15 +255,17 @@ class Canvas(QWidget):
                 temp_image = QImage(width, height, QImage.Format_ARGB32_Premultiplied)
                 painter = QPainter(temp_image)
                 painter.setPen(Qt.NoPen)
-                # painter.setBrush(Qt.white)
                 painter.setBrush(QBrush(QPixmap("transparent.jpg")))
                 painter.drawRect(QRect(0, 0, width, height))
                 painter.drawImage(0, 0, self._image)
                 painter.end()
 
+                # Устанавлием изображение с новым размером и меняем размер холста
                 self.image = temp_image
                 self.setEdited(True)
                 self.clearSelection()
+
+                self.send_new_image_size.emit(width, height)
 
         elif self.rect_bottom_right_corner().contains(event.pos()):
             self.setCursor(Qt.SizeFDiagCursor)

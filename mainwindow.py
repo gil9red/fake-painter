@@ -48,11 +48,15 @@ class MainWindow(QMainWindow, QObject):
         self.ui.actionPlugin_Manager.triggered.connect(self.show_plugin_manager)
 
         self.ui.tabWidget.currentChanged.connect(self.activate_tab)
+        self.ui.tabWidget.currentChanged.connect(self.send_tab_changed)
+
         self.ui.tabWidget.tabCloseRequested.connect(self.close_tab)
 
         self.update_states()
 
     send_cursor_pos = Signal(int, int)
+    send_new_image_size = Signal(int, int)
+    send_tab_changed = Signal(int)
 
     def load_plugins(self):
         # TODO: добавить application
@@ -104,6 +108,9 @@ class MainWindow(QMainWindow, QObject):
         canvas = Canvas(self.data_singleton)
         self.mUndoStackGroup.addStack(canvas.getUndoStack())
 
+        canvas.send_cursor_pos.connect(self.send_cursor_pos)
+        canvas.send_new_image_size.connect(self.send_new_image_size)
+
         scroll_area = QScrollArea()
         scroll_area.setWidget(canvas)
         scroll_area.setBackgroundRole(QPalette.Dark)
@@ -125,9 +132,9 @@ class MainWindow(QMainWindow, QObject):
         # mSizeLabel->setText(QString("%1 x %2").arg(size.width()).arg(size.height()));
 
         canvas = self.get_current_canvas()
-        canvas.send_cursor_pos.connect(self.send_cursor_pos)
-
         self.mUndoStackGroup.setActiveStack(canvas.getUndoStack())
+
+        self.send_new_image_size.emit(canvas.width(), canvas.height())
 
         self.update_states()
 
