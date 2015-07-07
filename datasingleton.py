@@ -23,22 +23,31 @@ class DataSingleton:
         # self.instActionDict = {}
         self.action_filter_dict = {}
 
-        self.disabled_plugins = []
+        # TODO: список отключенных плагинов, сохраняемый и загружаемый из настроек
+        self.disabled_plugin_names = []
 
         # TODO: пусть синглетон будет хранить словари с плагинами -- проще
         # будет получать информацию из плагинов, да и идентичность объектов
         # в словарях pluginsloader и синглетона будет плюсом
-        # # Словарь с загруженными плагинами: ключ - имя плагина,
-        # # значение - экземпляр плагина
-        # self.plugins = {}
-        #
-        # # Словарь с плагинами, которые были отключены пользователем: ключ - имя плагина,
-        # # значение - экземпляр плагина
-        # self.disabled_plugins = {}
+        # Словарь с загруженными плагинами: ключ - имя плагина,
+        # значение - экземпляр плагина
+        self.plugins = {}
+
+        # Словарь с плагинами, которые были отключены пользователем: ключ - имя плагина,
+        # значение - экземпляр плагина
+        self.disabled_plugins = {}
 
         self.settings_path = 'settings.cfg'
 
         self.image = DataSingleton.Image()
+
+        try:
+            import json
+            with open(self.settings_path, 'r') as f:
+                data = json.load(f)
+                self.from_serialize(data['Settings'])
+        except Exception as e:
+            print(e)
 
         self.mainWindow = MainWindow(self)
         self.mainWindow.load_plugins()
@@ -49,11 +58,15 @@ class DataSingleton:
     def to_serialize(self):
         return {
             'settings_path': self.settings_path,
+            # TODO: rem
+            # 'disabled_plugin_names': self.disabled_plugin_names,
+            'disabled_plugin_names': list(self.disabled_plugins.keys()),
             'image': self.image.to_serialize()
         }
 
     def from_serialize(self, data):
         self.settings_path = data['settings_path']
+        self.disabled_plugin_names = data['disabled_plugin_names']
         self.image.from_serialize(data['image'])
 
     # TODO: rem

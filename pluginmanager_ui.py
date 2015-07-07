@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pluginmanager.ui'
 #
-# Created: Sat Jul  4 19:09:13 2015
+# Created: Mon Jul  6 16:49:38 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -18,8 +18,8 @@ class Ui_PluginManager(object):
         self.splitter = QtGui.QSplitter(PluginManager)
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName("splitter")
-        self.listPlugins = QtGui.QListView(self.splitter)
-        self.listPlugins.setObjectName("listPlugins")
+        self.view = QtGui.QListView(self.splitter)
+        self.view.setObjectName("view")
         self.description = QtGui.QTextEdit(self.splitter)
         self.description.setObjectName("description")
         self.verticalLayout.addWidget(self.splitter)

@@ -125,7 +125,6 @@ class MainWindow(QMainWindow, QObject):
         # mSizeLabel->setText(QString("%1 x %2").arg(size.width()).arg(size.height()));
 
         canvas = self.get_current_canvas()
-
         canvas.send_cursor_pos.connect(self.send_cursor_pos)
 
         self.mUndoStackGroup.setActiveStack(canvas.getUndoStack())
@@ -202,7 +201,8 @@ class MainWindow(QMainWindow, QObject):
                 self.restoreGeometry(QByteArray.fromHex(data['MainWindow']['geometry']))
                 self.restoreState(QByteArray.fromHex(data['MainWindow']['state']))
 
-                self.data_singleton.from_serialize(data['Settings'])
+                # TODO: синглетон должен сам грузить свои настройки, еще до загрузки mainwindow
+                # self.data_singleton.from_serialize(data['Settings'])
         except Exception as e:
             print(e)
 
@@ -216,6 +216,7 @@ class MainWindow(QMainWindow, QObject):
                         'geometry': str(self.saveGeometry().toHex()),
                     },
 
+                    # TODO: вызывать у синглетона функцию
                     'Settings': self.data_singleton.to_serialize(),
                 }
 

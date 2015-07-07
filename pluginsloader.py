@@ -44,12 +44,14 @@ class PluginsLoader:
         # Словарь с загруженными плагинами
         # Ключ - имя плагина
         # Значение - экземпляр плагина
-        self._plugins = {}
+        self._plugins = self.data_singleton.plugins
 
         # Словарь с плагинами, которые были отключены пользователем
         # Ключ - имя плагина
         # Значение - экземпляр плагина
-        self._disabled_plugins = {}
+        self._disabled_plugins = self.data_singleton.disabled_plugins
+
+        self._disabled_plugin_names = self.data_singleton.disabled_plugin_names
 
         # Пути, где ищутся плагины
         self._dir_list = []
@@ -70,41 +72,39 @@ class PluginsLoader:
 
         return self._disabled_plugins
 
-    def update_disable_list(self):
-        """
-        Обновление состояния плагинов. Одни отключить, другие включить
-        """
+    # def update_disable_list(self):
+    #     """Обновление состояния плагинов. Одни отключить, другие включить"""
+    #
+    #     # Пройтись по включенным плагинам и отключить те,
+    #     # что попали в черный список
+    #     self._disable_enabled_plugins(self.data_singleton.disabled_plugins)
+    #
+    #     # Пройтись по отключенным плагинам и включить те,
+    #     # что не попали в "черный список"
+    #     self._enable_disabled_plugins(self.data_singleton.disabled_plugins)
 
-        # Пройтись по включенным плагинам и отключить те,
-        # что попали в черный список
-        self._disable_enabled_plugins(self.data_singleton.disabled_plugins)
-
-        # Пройтись по отключенным плагинам и включить те,
-        # что не попали в "черный список"
-        self._enable_disabled_plugins(self.data_singleton.disabled_plugins)
-
-    def _disable_enabled_plugins(self, disable_list):
+    # TODO: проверять после закрытия диалога pluginmanager
+    def disable_enabled_plugins(self, disable_list):
         """Отключить загруженные плагины, попавшие в "черный список" (disableList)"""
 
-        for plugin_name in disable_list:
-            if plugin_name in self._plugins.keys():
-                self._plugins[plugin_name].destroy()
+        for plugin in disable_list:
+            if plugin in self._plugins.values():
+                # TODO: rem
+                print('destroy', plugin, __file__)
+                plugin.destroy()
 
-                assert plugin_name not in self._disabled_plugins
-                self._disabled_plugins[plugin_name] = self._plugins[plugin_name]
-                del self._plugins[plugin_name]
+                self._disabled_plugins[plugin.name()] = plugin
 
-    def _enable_disabled_plugins(self, disable_list):
+    # TODO: проверять после закрытия диалога pluginmanager
+    def enable_disabled_plugins(self, enabled_list):
         """Включить отключенные плагины, если их больше нет в "черном списке"""
 
-        for plugin in self._disabled_plugins.values():
-            if plugin.name not in disable_list:
+        for plugin in enabled_list:
+            if plugin in self.disabled_plugins.values():
+                # TODO: rem
+                print('init', plugin, __file__)
                 plugin.initialize()
-
-                assert plugin.name not in self._plugins
-                self._plugins[plugin.name] = plugin
-
-                del self._disabled_plugins[plugin.name]
+                del self._disabled_plugins[plugin.name()]
 
     def load(self, dir_list):
         """Загрузить плагины из указанных директорий.
@@ -131,11 +131,12 @@ class PluginsLoader:
                 # Все поддиректории попытаемся открыть как пакеты
                 self._import_modules(currentDir, dir_packets)
 
-    def clear(self):
-        """Уничтожить все загруженные плагины"""
-
-        map(lambda plugin: plugin.destroy(), self._plugins.values())
-        self._plugins = {}
+    # def clear(self):
+    #     """Уничтожить все загруженные плагины"""
+    #
+    #     # TODO: игнорировать те, что есть в _disabled_plugins
+    #     map(lambda plugin: plugin.destroy(), self._plugins.values())
+    #     self._plugins = {}
 
     def _import_modules(self, base_dir, dir_packages_list):
         """Попытаться импортировать пакеты
@@ -160,7 +161,8 @@ class PluginsLoader:
                 errors = []
 
                 # Количество загруженных плагинов до импорта нового
-                old_plugins_count = len(self._plugins) + len(self._disabled_plugins)
+                # old_plugins_count = len(self._plugins) + len(self._disabled_plugins)
+                old_plugins_count = len(self._plugins)
 
                 # Переберем все файлы внутри packagePath
                 # и попытаемся их импортировать
@@ -182,7 +184,8 @@ class PluginsLoader:
                     #                                    error=str(e)))
 
                 # Проверим, удалось ли загрузить плагин
-                new_plugins_count = len(self._plugins) + len(self._disabled_plugins)
+                # new_plugins_count = len(self._plugins) + len(self._disabled_plugins)
+                new_plugins_count = len(self._plugins)
 
                 # Вывод ошибок, если ни одного плагина из пакета не удалось
                 # импортировать
@@ -219,9 +222,9 @@ class PluginsLoader:
         for name in dir(module):
             self._create_object(module,
                                 name,
-                                self.data_singleton.disabled_plugins)
+                                self._disabled_plugin_names)
 
-    def _create_object(self, module, name, disabled_plugins):
+    def _create_object(self, module, name, disabled_plugin_names):
         """Попытаться загрузить класс, возможно, это плагин
 
         module - модуль, откуда загружается класс
@@ -239,22 +242,25 @@ class PluginsLoader:
 
             # Создаем плагин, и в его конструктор передаем datasingleton
             plugin = obj(self.data_singleton)
-            if not self._is_new_plugin(plugin.name):
+            if not self._is_new_plugin(plugin.name()):
                 return
 
-            if plugin.name not in disabled_plugins:
-                plugin.initialize()
-                self._plugins[plugin.name] = plugin
+            self._plugins[plugin.name()] = plugin
+            if plugin.name() in disabled_plugin_names:
+                self._disabled_plugins[plugin.name()] = plugin
             else:
-                self._disabled_plugins[plugin.name] = plugin
+                plugin.initialize()
 
     def _is_new_plugin(self, plugin_name):
         """Проверка того, что плагин с таким именем еще не был загружен
         plugin_name - плагин, который надо проверить
 
         """
-        return(plugin_name not in self._plugins and
-               plugin_name not in self._disabled_plugins)
+
+        return plugin_name not in self._plugins
+
+        # return(plugin_name not in self._plugins and
+        #        plugin_name not in self._disabled_plugins)
 
     def plugins(self):
         return self._plugins.values()
