@@ -38,8 +38,8 @@ class Canvas(QWidget):
 
         im = QImage(self.data_singleton.image.base_width, self.data_singleton.image.base_height,
                     QImage.Format_ARGB32_Premultiplied)
-        im.fill(Qt.transparent)
-        # im.fill(Qt.white)
+        # im.fill(Qt.transparent)
+        im.fill(Qt.white)
         self._image = None
         self.image = im
 
@@ -65,10 +65,14 @@ class Canvas(QWidget):
     # Send signal to selection instrument.
     sendEnableSelectionInstrument = Signal()
 
-    def save(self, file_name):
-        # Если не удалось сохранить
-        if not self._image.save(file_name):
-            raise Exception('Не удалось сохранить в "{}"'.format(file_name))
+    def save(self, file_name=None):
+        if file_name is not None:
+            # Если не удалось сохранить
+            if not self._image.save(file_name):
+                raise Exception('Не удалось сохранить в "{}"'.format(file_name))
+        else:
+            # TODO: сохраняем изображение по сохраненному у холста пути
+            pass
 
     def load(self, file_name):
         self.file_path = file_name
@@ -80,8 +84,8 @@ class Canvas(QWidget):
 
         self.image = im.convertToFormat(QImage.Format_ARGB32_Premultiplied)
 
-    def save(self):
-        pass
+    # def save(self):
+    #     pass
 
     # def saveAs(self):
     #     pass
