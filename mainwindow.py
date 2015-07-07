@@ -15,7 +15,7 @@ from settings import Settings
 from pluginmanager import PluginManager
 from canvas import Canvas
 from pluginsloader import PluginsLoader
-
+import os
 
 
 class MainWindow(QMainWindow, QObject):
@@ -38,7 +38,7 @@ class MainWindow(QMainWindow, QObject):
         self.ui.actionUndo.triggered.connect(self.mUndoStackGroup.undo)
         self.ui.actionRedo.triggered.connect(self.mUndoStackGroup.redo)
 
-        # self.ui.actionSave.triggered.connect(self.save)
+        self.ui.actionSave.triggered.connect(self.save)
         self.ui.actionSaveAs.triggered.connect(self.save_as)
         self.ui.actionNew.triggered.connect(self.new_tab)
         self.ui.actionOpen.triggered.connect(self.open)
@@ -72,18 +72,30 @@ class MainWindow(QMainWindow, QObject):
             print('  ', plugin)
 
     def update_states(self):
-        title = 'Empty'
-
-        if self.ui.tabWidget.count() > 0:
+        if self.ui.tabWidget.count() == 0:
+            self.setWindowTitle('Empty' + " - fake-painter")
+        else:
             canvas = self.get_current_canvas()
-            title = canvas.getFileName()
+            file_name = canvas.get_file_name()
+            # TODO: брать "Untitled Image" из синглетона
+            title = "Untitled Image" if file_name is None else file_name
+            tab_title = title
 
-        # TODO: названия проги хранить в синглетоне, и оттуда брать
-        self.setWindowTitle(title + " - fake-painter")
+            if canvas.edited:
+                title += '[*]'
+                tab_title += '*'
+
+            # TODO: названия проги хранить в синглетоне, и оттуда брать
+            self.setWindowTitle(title + " - fake-painter")
+
+            index = self.ui.tabWidget.currentIndex()
+            self.ui.tabWidget.setTabText(index, tab_title)
+
+            self.setWindowModified(canvas.edited)
 
     def close_tab(self, index):
         canvas = self.get_canvas(index)
-        if canvas.getEdited():
+        if canvas.edited:
             reply = QMessageBox.warning(self,
                                         "Closing Tab...",
                                         "File has been modified\n"
@@ -110,12 +122,16 @@ class MainWindow(QMainWindow, QObject):
 
         canvas.send_cursor_pos.connect(self.send_cursor_pos)
         canvas.send_new_image_size.connect(self.send_new_image_size)
+        canvas.send_change_edited.connect(self.update_states)
 
         scroll_area = QScrollArea()
         scroll_area.setWidget(canvas)
         scroll_area.setBackgroundRole(QPalette.Dark)
 
-        self.ui.tabWidget.addTab(scroll_area, canvas.getFileName())
+        file_name = canvas.get_file_name()
+        # TODO: "Untitled Image" брать из синглетона
+        title = "Untitled Image" if file_name is None else file_name
+        self.ui.tabWidget.addTab(scroll_area, title)
 
         self.update_states()
 
@@ -138,23 +154,46 @@ class MainWindow(QMainWindow, QObject):
 
         self.update_states()
 
-    # def save(self):
-    #     print(self.currentCanvas())
+    def save(self):
+        try:
+            canvas = self.get_current_canvas()
+            if canvas is not None:
+                if canvas.file_path is None:
+                    self.save_as()
+                else:
+                    canvas.save()
+
+        except Exception as e:
+            QMessageBox.warning(self, 'Warning', str(e))
+
+        self.update_states()
 
     def save_as(self):
+        canvas = self.get_current_canvas()
+        if canvas is None:
+            return
+
         # Список строк с поддерживаемыми форматами изображений
         formats = [str(x) for x in QImageWriter.supportedImageFormats()]
 
         # Описываем как фильтры диалога
         filters = ["{} ( *.{} )".format(x.upper(), x) for x in formats]
 
+        file_name = canvas.get_file_name()
+        if file_name is None:
+            # TODO: "Untitled image" брать из синглетона
+            file_name = os.path.join(QDir.homePath(), "Untitled image")
+
+        # TODO: суффикс по умолчанию -- png
         # Получим путь к файлу
-        file_name = QFileDialog.getSaveFileName(self, None, None, '\n'.join(filters))[0]
+        file_name = QFileDialog.getSaveFileName(self, None, file_name, '\n'.join(filters))[0]
         if file_name:
             try:
-                self.get_current_canvas().save(file_name)
+                canvas.save(file_name)
             except Exception as e:
-                QMessageBox.warning(self, 'Внимание', str(e))
+                QMessageBox.warning(self, 'Warning', str(e))
+
+        self.update_states()
 
     def open(self):
         # Список строк с поддерживаемыми форматами изображений
@@ -169,7 +208,11 @@ class MainWindow(QMainWindow, QObject):
         file_name = QFileDialog.getOpenFileName(self, None, None, filters)[0]
         if file_name:
             try:
-                self.get_current_canvas().load(file_name)
+                canvas = self.get_current_canvas()
+                if canvas is not None:
+                    canvas.load(file_name)
+                    self.update_states()
+
             except Exception as e:
                 QMessageBox.warning(self, 'Внимание', str(e))
 

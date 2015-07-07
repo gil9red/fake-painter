@@ -71,7 +71,7 @@ class FillInstrument(AbstractInstrument):
 
         self.fill_recurs(x, y, switch_color.rgb(), old_color.rgb(), canvas.image)
 
-        canvas.setEdited(True)
+        canvas.edited = True
         canvas.update()
 
     def fill_recurs(self, x, y, switch_color, old_color, temp_image):

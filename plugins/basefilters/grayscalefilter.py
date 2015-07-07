@@ -41,5 +41,5 @@ class GrayscaleFilter(AbstractFilter):
                 alpha = qAlpha(pixel)
                 im.setPixel(x, y, qRgba(gray, gray, gray, alpha))
 
-        canvas.setEdited(True)
+        canvas.edited = True
         canvas.update()

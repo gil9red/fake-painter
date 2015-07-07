@@ -34,4 +34,4 @@ class SwapRGBFilter(AbstractFilter):
         im = canvas.image.rgbSwapped()
         canvas.image = im
 
-        canvas.setEdited(True)
+        canvas.edited = True

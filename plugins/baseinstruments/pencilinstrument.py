@@ -85,5 +85,5 @@ class PencilInstrument(AbstractInstrument):
 
         painter.end()
 
-        canvas.setEdited(True)
+        canvas.edited = True
         canvas.update()

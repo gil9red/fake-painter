@@ -22,7 +22,7 @@ class Canvas(QWidget):
         self.imageCopy = QImage()
         self.file_path = None
 
-        self.mIsEdited = False
+        self._edited = False
         self.mIsPaint = False
         self.m_is_resize = False
         self.mRightButtonPressed = False
@@ -65,23 +65,38 @@ class Canvas(QWidget):
     # Send signal to selection instrument.
     sendEnableSelectionInstrument = Signal()
 
-    def save(self, file_name=None):
-        if file_name is not None:
-            # Если не удалось сохранить
-            if not self._image.save(file_name):
-                raise Exception('Не удалось сохранить в "{}"'.format(file_name))
-        else:
-            # TODO: сохраняем изображение по сохраненному у холста пути
-            pass
+    send_change_edited = Signal(bool)
 
-    def load(self, file_name):
-        self.file_path = file_name
+    def save(self, file_path=None):
+        # Если выполнено "Сохранить как", а холст не имеет файла
+        if file_path is not None and self.file_path is None:
+            self.file_path = file_path
+
+        if file_path is not None:
+            file_name = file_path
+        else:
+            file_name = self.file_path
+
+        # Если не удалось сохранить
+        if not self._image.save(file_name):
+            raise Exception('Не удалось сохранить в "{}"'.format(file_name))
+
+        # Если есть изменения и выполняем "сохранить как"
+        # то edited=True, если текущий файл совпадает с сохраняемым
+        if self.edited and file_path is not None:
+            self.edited = self.file_path != file_path
+        else:
+            self.edited = False
+
+    def load(self, file_path):
+        self.file_path = file_path
         im = QImage()
 
         # Если не удалось загрузить
-        if not im.load(file_name):
-            raise Exception('Не удалось загрузить из "{}"'.format(file_name))
+        if not im.load(file_path):
+            raise Exception('Не удалось загрузить из "{}"'.format(file_path))
 
+        self.edited = False
         self.image = im.convertToFormat(QImage.Format_ARGB32_Premultiplied)
 
     # def save(self):
@@ -102,11 +117,9 @@ class Canvas(QWidget):
     def rotateImage(self, flag):
         pass
 
-    def getFileName(self):
-        if self.file_path:
+    def get_file_name(self):
+        if self.file_path is not None:
             return os.path.basename(self.file_path)
-        else:
-            return "Untitled image"
 
     def get_image(self):
         return self._image
@@ -120,11 +133,14 @@ class Canvas(QWidget):
 
     image = property(get_image, set_image)
 
-    def setEdited(self, flag):
-        self.mIsEdited = flag
+    def set_edited(self, flag):
+        self._edited = flag
+        self.send_change_edited.emit(flag)
 
-    def getEdited(self):
-        return self.mIsEdited
+    def get_edited(self):
+        return self._edited
+
+    edited = property(get_edited, set_edited)
 
     def applyEffect(self, effect):
         pass
@@ -266,7 +282,7 @@ class Canvas(QWidget):
 
                 # Устанавлием изображение с новым размером и меняем размер холста
                 self.image = temp_image
-                self.setEdited(True)
+                self.edited = True
                 self.clearSelection()
 
                 self.send_new_image_size.emit(width, height)

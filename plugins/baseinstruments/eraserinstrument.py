@@ -64,5 +64,5 @@ class EraserInstrument(AbstractInstrument):
                 if check_x and check_y:
                     canvas.image.setPixel(x + i, y + j, self._transparent)
 
-        canvas.setEdited(True)
+        canvas.edited = True
         canvas.update()

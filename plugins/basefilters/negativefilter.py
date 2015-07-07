@@ -32,5 +32,5 @@ class NegativeFilter(AbstractFilter):
         self.make_undo_command(canvas)
 
         canvas.image.invertPixels()
-        canvas.setEdited(True)
+        canvas.edited = True
         canvas.update()

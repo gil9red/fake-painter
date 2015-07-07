@@ -76,5 +76,5 @@ class LineInstrument(AbstractInstrument):
 
         painter.end()
 
-        canvas.setEdited(True)
+        canvas.edited = True
         canvas.update()
