@@ -13,6 +13,7 @@ from .lineinstrument import LineInstrument
 from .pencilinstrument import PencilInstrument
 from .rectangleinstrument import RectangleInstrument
 from .eraserinstrument import EraserInstrument
+from .fillinstrument import FillInstrument
 
 from PySide.QtGui import *
 from PySide.QtCore import *
@@ -39,6 +40,7 @@ class PluginBaseInstruments(IPlugin):
         self.instruments.append(PencilInstrument())
         self.instruments.append(LineInstrument())
         self.instruments.append(RectangleInstrument())
+        self.instruments.append(FillInstrument())
 
         mw = self.data_singleton.mainWindow
 

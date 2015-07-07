@@ -58,6 +58,7 @@ class FillInstrument(AbstractInstrument):
             # switch_color = DataSingleton::Instance()->getPrimaryColor()
             switch_color = QColor(Qt.black)
 
+        # TODO: не заливает, если кликать на transparent фон
         x, y = self.mStartPoint.x(), self.mStartPoint.y()
 
         pixel = canvas.image.pixel(x, y)
