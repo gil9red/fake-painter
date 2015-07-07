@@ -26,6 +26,10 @@ class RectangleInstrument(AbstractInstrument):
     def icon(self):
         return self.__icon
 
+    def cursor(self):
+        # TODO: support this
+        pass
+
     def mouse_press_event(self, event, canvas):
         if event.buttons() == Qt.LeftButton or event.buttons() == Qt.RightButton:
             self.mStartPoint = event.pos()

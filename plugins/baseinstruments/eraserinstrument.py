@@ -27,6 +27,10 @@ class EraserInstrument(AbstractInstrument):
     def icon(self):
         return self._icon
 
+    def cursor(self):
+        # TODO: support this
+        pass
+
     def mouse_press_event(self, event, canvas):
         self.mStartPoint = event.pos()
         self.mEndPoint = event.pos()
@@ -53,25 +57,12 @@ class EraserInstrument(AbstractInstrument):
 
         for i in range(-20, 20):
             for j in range(-20, 20):
-                if x + i < canvas.image.width() and y + j < canvas.image.height() and x + i >= 0 and y + j >= 0:
+                # check_x = x + i < canvas.image.width() and x + i >= 0
+                # check_y = y + j < canvas.image.height() and y + j >= 0
+                check_x = canvas.image.width() > x + i >= 0
+                check_y = canvas.image.height() > y + j >= 0
+                if check_x and check_y:
                     canvas.image.setPixel(x + i, y + j, self._transparent)
-
-        # painter = QPainter(canvas.image)
-        # # TODO: оставлять после ластика ничего -- должен быть виден задний фон
-        # # painter.setPen(QPen(Qt.transparent,
-        # painter.setPen(QPen(Qt.white,
-        #                     # TODO: брать найстройки из класса-синглетона
-        #                     # DataSingleton::Instance()->getPenSize() * imageArea.getZoomFactor(),
-        #                     2.0,
-        #                     Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-        #
-        # if self.mStartPoint != self.mEndPoint:
-        #     painter.drawLine(self.mStartPoint, self.mEndPoint)
-        #
-        # if self.mStartPoint == self.mEndPoint:
-        #     painter.drawPoint(self.mStartPoint)
-        #
-        # painter.end()
 
         canvas.setEdited(True)
         canvas.update()

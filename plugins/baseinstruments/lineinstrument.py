@@ -26,6 +26,10 @@ class LineInstrument(AbstractInstrument):
     def icon(self):
         return self.__icon
 
+    def cursor(self):
+        # TODO: support this
+        pass
+
     def mouse_press_event(self, event, canvas):
         self.mStartPoint = event.pos()
         self.mEndPoint = event.pos()

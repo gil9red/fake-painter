@@ -12,7 +12,6 @@ from undocommand import UndoCommand
 
 
 # TODO: может и версию добавить?
-# TODO: добавить метод, возвращающий иконку инструмента
 
 class AbstractInstrument(metaclass=ABCMeta):
     def __init__(self):
@@ -31,6 +30,10 @@ class AbstractInstrument(metaclass=ABCMeta):
     @abstractproperty
     def icon(self):
         """Свойство должно возвращать иконку инструмента"""
+
+    @abstractproperty
+    def cursor(self):
+        """Свойство должно возвращать курсор для текущего инструмента"""
 
     @abstractmethod
     def mouse_press_event(self, event, canvas):
