@@ -21,6 +21,9 @@ from PySide.QtGui import *
 class PluginBaseFilters(IPlugin):
     def __init__(self, data_singleton):
         self.data_singleton = data_singleton
+        self.mw = data_singleton.mainWindow
+        self.base_filter_action_group = None
+        self.menu_filters = self.mw.ui.menuFilters
         self.filters = []
 
     def name(self):
@@ -67,24 +70,11 @@ class PluginBaseFilters(IPlugin):
         self.filters.append(GrayscaleFilter())
         self.filters.append(SwapRGBFilter())
 
-        mw = self.data_singleton.mainWindow
-
-        # base_inst_tool_bar = mw.addToolBar(self.description())
-        # base_inst_tool_bar.setObjectName(self.name())
-        # base_inst_tool_bar.setToolButtonStyle(Qt.ToolButtonIconOnly)
-        #
-        # mw.base_inst_action_group = QActionGroup(base_inst_tool_bar)
-        # mw.base_inst_action_group.setExclusive(True)
-        # mw.base_inst_action_group.triggered.connect(lambda x: self.triggered_action_instrument(x))
-
-        menu_filters = mw.ui.menuFilters
-
-        mw.base_filter_action_group = QActionGroup(menu_filters)
-        mw.base_filter_action_group.triggered.connect(lambda x: self.triggered_action_filter(x))
+        self.base_filter_action_group = QActionGroup(self.menu_filters)
+        self.base_filter_action_group.triggered.connect(lambda x: self.triggered_action_filter(x))
 
         for filter_ in self.filters:
-            # act = base_inst_tool_bar.addAction(inst.icon(), inst.name())
-            act = menu_filters.addAction(filter_.name())
+            act = self.menu_filters.addAction(filter_.name())
             # TODO: objectName вида <class 'baseinstruments.rectangleinstrument.RectangleInstrument'>
             # кажется неудобным, может другое значение составлять
             act.setObjectName(str(type(filter_)))
@@ -92,17 +82,18 @@ class PluginBaseFilters(IPlugin):
             if filter_.icon():
                 act.setIcon(filter_.icon())
 
-            mw.base_filter_action_group.addAction(act)
-            # menu_instruments.addActions(mw.base_inst_action_group.actions())
+            self.base_filter_action_group.addAction(act)
             self.data_singleton.action_filter_dict[act] = filter_
 
     def destroy(self):
-        # TODO: поддержать
-        pass
+        for act in self.data_singleton.action_filter_dict.keys():
+            self.menu_filters.removeAction(act)
+
+        self.filters.clear()
+        self.data_singleton.action_filter_dict.clear()
+        self.base_filter_action_group.deleteLater()
+        self.base_filter_action_group = None
 
     def triggered_action_filter(self, action):
-        mw = self.data_singleton.mainWindow
-
         filter_ = self.data_singleton.action_filter_dict[action]
-        filter_.apply_filter(mw.get_current_canvas())
-
+        filter_.apply_filter(self.mw.get_current_canvas())
