@@ -19,7 +19,7 @@ class Canvas(QWidget):
 
         self.data_singleton = data_singleton
 
-        self.imageCopy = QImage()
+        # self.imageCopy = QImage()
         self.file_path = None
 
         self._edited = False
@@ -196,7 +196,7 @@ class Canvas(QWidget):
     def clearSelection(self):
         pass
 
-    def pushUndoCommand(self, command):
+    def push_undo_command(self, command):
         if command:
             self.mUndoStack.push(command)
 

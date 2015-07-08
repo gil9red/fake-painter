@@ -58,4 +58,4 @@ class AbstractInstrument(metaclass=ABCMeta):
 
         """
 
-        canvas.pushUndoCommand(UndoCommand(canvas))
+        canvas.push_undo_command(UndoCommand(canvas))
