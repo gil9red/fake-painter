@@ -115,21 +115,17 @@ class PluginsLoader:
 
         assert dir_list is not None
 
-        for currentDir in dir_list:
-            if os.path.exists(currentDir):
-                dir_packets = sorted(os.listdir(currentDir))
+        for current_dir in dir_list:
+            if os.path.exists(current_dir):
+                dir_packets = sorted(os.listdir(current_dir))
 
-                # Добавить путь до currentDir в sys.path
-                full_path = os.path.abspath(currentDir)
-
-                # TODO: странное место
-                syspath = [item for item in sys.path]
-
-                if full_path not in syspath:
+                # Добавить путь до current_dir в sys.path
+                full_path = os.path.abspath(current_dir)
+                if full_path not in sys.path:
                     sys.path.insert(0, full_path)
 
                 # Все поддиректории попытаемся открыть как пакеты
-                self._import_modules(currentDir, dir_packets)
+                self._import_modules(current_dir, dir_packets)
 
     # def clear(self):
     #     """Уничтожить все загруженные плагины"""
