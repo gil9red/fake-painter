@@ -27,7 +27,10 @@ class GrayscaleFilter(AbstractFilter):
         return None
 
     def apply_filter(self, canvas):
-        # TODO: проверять canvas на Nоne, логировать
+        if canvas is None:
+            return
+
+        # TODO: логировать
         # TODO: реализовать
         # canvas.clearSelection();
         self.make_undo_command(canvas)
