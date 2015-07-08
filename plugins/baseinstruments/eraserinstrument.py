@@ -32,21 +32,21 @@ class EraserInstrument(AbstractInstrument):
         pass
 
     def mouse_press_event(self, event, canvas):
-        self.mStartPoint = event.pos()
-        self.mEndPoint = event.pos()
+        self._start_point = event.pos()
+        self._end_point = event.pos()
         canvas.setIsPaint(True)
 
         self.make_undo_command(canvas)
 
     def mouse_move_event(self, event, canvas):
         if canvas.isPaint():
-            self.mEndPoint = event.pos()
+            self._end_point = event.pos()
             self.paint(canvas)
-            self.mStartPoint = event.pos()
+            self._start_point = event.pos()
 
     def mouse_release_event(self, event, canvas):
         if canvas.isPaint():
-            self.mEndPoint = event.pos()
+            self._end_point = event.pos()
             self.paint(canvas)
             canvas.setIsPaint(False)
 
@@ -54,7 +54,7 @@ class EraserInstrument(AbstractInstrument):
         # TODO: рефакторинг
         # TODO: поддержка разных размеров
         # TODO: поддержка очищения прозрачными пикселями
-        x, y = self.mStartPoint.x(), self.mStartPoint.y()
+        x, y = self._start_point.x(), self._start_point.y()
         erase_color = QColor(canvas.background_color).rgba()
 
         for i in range(-20, 20):

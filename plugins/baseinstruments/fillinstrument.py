@@ -32,8 +32,8 @@ class FillInstrument(AbstractInstrument):
 
     def mouse_press_event(self, event, canvas):
         if event.buttons() == Qt.LeftButton or event.buttons() == Qt.RightButton:
-            self.mStartPoint = event.pos()
-            self.mEndPoint = event.pos()
+            self._start_point = event.pos()
+            self._end_point = event.pos()
             canvas.setIsPaint(True)
             self.make_undo_command(canvas)
 
@@ -59,7 +59,7 @@ class FillInstrument(AbstractInstrument):
             switch_color = QColor(Qt.black)
 
         # TODO: не заливает, если кликать на transparent фон
-        x, y = self.mStartPoint.x(), self.mStartPoint.y()
+        x, y = self._start_point.x(), self._start_point.y()
 
         pixel = canvas.image.pixel(x, y)
         old_color = QColor(pixel)

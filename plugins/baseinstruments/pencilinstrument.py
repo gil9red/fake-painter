@@ -31,25 +31,25 @@ class PencilInstrument(AbstractInstrument):
 
     def mouse_press_event(self, event, canvas):
         if event.buttons() == Qt.LeftButton or event.buttons() == Qt.RightButton:
-            self.mStartPoint = event.pos()
-            self.mEndPoint = event.pos()
+            self._start_point = event.pos()
+            self._end_point = event.pos()
             canvas.setIsPaint(True)
             self.make_undo_command(canvas)
 
     def mouse_move_event(self, event, canvas):
         if canvas.isPaint():
-            self.mEndPoint = event.pos()
+            self._end_point = event.pos()
 
             if event.buttons() == Qt.LeftButton:
                 self.paint(canvas, False)
             elif event.buttons() == Qt.RightButton:
                 self.paint(canvas, True)
 
-            self.mStartPoint = event.pos()
+            self._start_point = event.pos()
 
     def mouse_release_event(self, event, canvas):
         if canvas.isPaint():
-            self.mEndPoint = event.pos()
+            self._end_point = event.pos()
 
             if event.button() == Qt.LeftButton:
                 self.paint(canvas, False)
@@ -77,11 +77,11 @@ class PencilInstrument(AbstractInstrument):
 
         painter.setPen(pen)
 
-        if self.mStartPoint != self.mEndPoint:
-            painter.drawLine(self.mStartPoint, self.mEndPoint)
+        if self._start_point != self._end_point:
+            painter.drawLine(self._start_point, self._end_point)
 
-        if self.mStartPoint == self.mEndPoint:
-            painter.drawPoint(self.mStartPoint)
+        if self._start_point == self._end_point:
+            painter.drawPoint(self._start_point)
 
         painter.end()
 

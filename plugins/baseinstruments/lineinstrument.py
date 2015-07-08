@@ -31,16 +31,16 @@ class LineInstrument(AbstractInstrument):
         pass
 
     def mouse_press_event(self, event, canvas):
-        self.mStartPoint = event.pos()
-        self.mEndPoint = event.pos()
-        self.mImageCopy = canvas.image
+        self._start_point = event.pos()
+        self._end_point = event.pos()
+        self._image_copy = canvas.image
         canvas.setIsPaint(True)
         self.make_undo_command(canvas)
 
     def mouse_move_event(self, event, canvas):
         if canvas.isPaint():
-            self.mEndPoint = event.pos()
-            canvas.image = self.mImageCopy.copy()
+            self._end_point = event.pos()
+            canvas.image = self._image_copy.copy()
 
             if event.buttons() == Qt.LeftButton:
                 self.paint(canvas, False)
@@ -72,7 +72,7 @@ class LineInstrument(AbstractInstrument):
             pen.setBrush(Qt.black)
 
         painter.setPen(pen)
-        painter.drawLine(self.mStartPoint, self.mEndPoint)
+        painter.drawLine(self._start_point, self._end_point)
 
         painter.end()
 

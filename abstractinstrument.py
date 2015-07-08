@@ -15,9 +15,9 @@ from undocommand import UndoCommand
 
 class AbstractInstrument(metaclass=ABCMeta):
     def __init__(self):
-        self.mStartPoint = None
-        self.mEndPoint = None
-        self.mImageCopy = None
+        self._start_point = None
+        self._end_point = None
+        self._image_copy = None
 
     @abstractproperty
     def name(self):
