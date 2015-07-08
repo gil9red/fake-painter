@@ -82,6 +82,8 @@ class PluginBaseInstruments(IPlugin):
 
         self.data_singleton.action_inst_dict.clear()
 
+        self.data_singleton.current_instrument = None
+
     def triggered_action_instrument(self, action):
         instrument = self.data_singleton.action_inst_dict[action]
         self.data_singleton.current_instrument = instrument
