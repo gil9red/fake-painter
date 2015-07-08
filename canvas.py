@@ -36,10 +36,13 @@ class Canvas(QWidget):
 
         self.setMouseTracking(True)
 
+        # Цвет заднего фона, используется так же для ластика
+        # self.background_color = Qt.transparent
+        self.background_color = Qt.white
+
         im = QImage(self.data_singleton.image.base_width, self.data_singleton.image.base_height,
                     QImage.Format_ARGB32_Premultiplied)
-        # im.fill(Qt.transparent)
-        im.fill(Qt.white)
+        im.fill(self.background_color)
         self._image = None
         self.image = im
 

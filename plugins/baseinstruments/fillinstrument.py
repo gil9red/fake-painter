@@ -65,11 +65,7 @@ class FillInstrument(AbstractInstrument):
         old_color = QColor(pixel)
 
         if switch_color != old_color:
-            self.fill_recurs(x, y,
-                             switch_color.rgb(), old_color.rgb(),
-                             canvas.image)
-
-        self.fill_recurs(x, y, switch_color.rgb(), old_color.rgb(), canvas.image)
+            self.fill_recurs(x, y, switch_color.rgb(), old_color.rgb(), canvas.image)
 
         canvas.edited = True
         canvas.update()

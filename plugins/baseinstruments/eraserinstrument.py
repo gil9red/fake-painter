@@ -16,7 +16,7 @@ from PySide.QtCore import *
 class EraserInstrument(AbstractInstrument):
     def __init__(self):
         self._icon = QIcon('plugins/baseinstruments/icons/lastic.png')
-        self._transparent = QColor(Qt.transparent).rgba()
+        # self._transparent = QColor(Qt.transparent).rgba()
 
     def name(self):
         return 'Eraser Instrument'
@@ -53,16 +53,17 @@ class EraserInstrument(AbstractInstrument):
     def paint(self, canvas, is_secondary_color=False, additional_flag=False):
         # TODO: рефакторинг
         # TODO: поддержка разных размеров
+        # TODO: поддержка очищения прозрачными пикселями
         x, y = self.mStartPoint.x(), self.mStartPoint.y()
+        erase_color = QColor(canvas.background_color).rgba()
 
         for i in range(-20, 20):
             for j in range(-20, 20):
-                # check_x = x + i < canvas.image.width() and x + i >= 0
-                # check_y = y + j < canvas.image.height() and y + j >= 0
                 check_x = canvas.image.width() > x + i >= 0
                 check_y = canvas.image.height() > y + j >= 0
                 if check_x and check_y:
-                    canvas.image.setPixel(x + i, y + j, self._transparent)
+                    canvas.image.setPixel(x + i, y + j, erase_color)
+                    # canvas.image.setPixel(x + i, y + j, self._transparent)
 
         canvas.edited = True
         canvas.update()
