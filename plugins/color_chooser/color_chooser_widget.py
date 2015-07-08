@@ -12,7 +12,7 @@ from PySide.QtGui import *
 from PySide.QtCore import *
 
 
-class ColorChooser(QLabel):
+class ColorChooserWidget(QLabel):
     """Widget for selecting color."""
 
     def __init__(self, r, g, b):
