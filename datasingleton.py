@@ -23,12 +23,12 @@ class DataSingleton:
         # self.instActionDict = {}
         self.action_filter_dict = {}
 
+        self.UNTITLED = 'Untitled'
+        self.PROGRAM_NAME = 'fake-painter'
+
         # TODO: список отключенных плагинов, сохраняемый и загружаемый из настроек
         self.disabled_plugin_names = []
 
-        # TODO: пусть синглетон будет хранить словари с плагинами -- проще
-        # будет получать информацию из плагинов, да и идентичность объектов
-        # в словарях pluginsloader и синглетона будет плюсом
         # Словарь с загруженными плагинами: ключ - имя плагина,
         # значение - экземпляр плагина
         self.plugins = {}
@@ -58,8 +58,6 @@ class DataSingleton:
     def to_serialize(self):
         return {
             'settings_path': self.settings_path,
-            # TODO: rem
-            # 'disabled_plugin_names': self.disabled_plugin_names,
             'disabled_plugin_names': list(self.disabled_plugins.keys()),
             'image': self.image.to_serialize()
         }

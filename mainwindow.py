@@ -59,7 +59,6 @@ class MainWindow(QMainWindow, QObject):
     send_tab_changed = Signal(int)
 
     def load_plugins(self):
-        # TODO: добавить application
         # TODO: проверить импортирование пакетов пакетов
         loader = PluginsLoader(self.data_singleton)
         loader.enableOutput = True
@@ -73,20 +72,19 @@ class MainWindow(QMainWindow, QObject):
 
     def update_states(self):
         if self.ui.tabWidget.count() == 0:
-            self.setWindowTitle('Empty' + " - fake-painter")
+            self.setWindowTitle('Empty' + ' - ' + self.data_singleton.PROGRAM_NAME)
         else:
             canvas = self.get_current_canvas()
             file_name = canvas.get_file_name()
-            # TODO: брать "Untitled Image" из синглетона
-            title = "Untitled Image" if file_name is None else file_name
+
+            title = self.data_singleton.UNTITLED if file_name is None else file_name
             tab_title = title
 
             if canvas.edited:
                 title += '[*]'
                 tab_title += '*'
 
-            # TODO: названия проги хранить в синглетоне, и оттуда брать
-            self.setWindowTitle(title + " - fake-painter")
+            self.setWindowTitle(title + ' - ' + self.data_singleton.PROGRAM_NAME)
 
             index = self.ui.tabWidget.currentIndex()
             self.ui.tabWidget.setTabText(index, tab_title)
@@ -104,7 +102,7 @@ class MainWindow(QMainWindow, QObject):
                                         QMessageBox.Yes)
 
             if reply == QMessageBox.Yes:
-                canvas.save()
+                self.save(canvas)
             elif reply == QMessageBox.Cancel:
                 return
 
@@ -129,8 +127,7 @@ class MainWindow(QMainWindow, QObject):
         scroll_area.setBackgroundRole(QPalette.Dark)
 
         file_name = canvas.get_file_name()
-        # TODO: "Untitled Image" брать из синглетона
-        title = "Untitled Image" if file_name is None else file_name
+        title = self.data_singleton.UNTITLED if file_name is None else file_name
         self.ui.tabWidget.addTab(scroll_area, title)
 
         self.update_states()
@@ -154,10 +151,12 @@ class MainWindow(QMainWindow, QObject):
 
         self.update_states()
 
-    def save(self):
+    def save(self, canvas_=None):
         try:
-            canvas = self.get_current_canvas()
+            # Если canvas_ не указан, берем текущий
+            canvas = self.get_current_canvas() if canvas_ is None else canvas_
             if canvas is not None:
+                # Если у холста есть файл, сохраняем в него, иначе вызываем "сохранить как"
                 if canvas.file_path is None:
                     self.save_as()
                 else:
@@ -181,8 +180,7 @@ class MainWindow(QMainWindow, QObject):
 
         file_name = canvas.get_file_name()
         if file_name is None:
-            # TODO: "Untitled image" брать из синглетона
-            file_name = os.path.join(QDir.homePath(), "Untitled image")
+            file_name = os.path.join(QDir.homePath(), self.data_singleton.UNTITLED)
 
         # TODO: суффикс по умолчанию -- png
         # Получим путь к файлу
@@ -277,7 +275,9 @@ class MainWindow(QMainWindow, QObject):
     def closeEvent(self, *args, **kwargs):
         self.write_settings()
 
-        # TODO: тут нужно закрывать все открытые вкладки
+        # Закрывать вкладки будем с правого края
+        for i in reversed(range(self.ui.tabWidget.count())):
+            self.close_tab(i)
 
         # TODO: спрашивать о том уверенности пользователя нужно с учетом флажка
         # reply = QtGui.QMessageBox.question(self, 'Message',
