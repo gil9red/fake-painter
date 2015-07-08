@@ -24,6 +24,10 @@ from PySide.QtCore import *
 class PluginBaseInstruments(IPlugin):
     def __init__(self, data_singleton):
         self.data_singleton = data_singleton
+        self.mw = self.data_singleton.mainWindow
+        self.menu_instruments = None
+        self.base_inst_tool_bar = None
+        self.base_inst_action_group = None
         self.instruments = []
 
     def name(self):
@@ -42,20 +46,18 @@ class PluginBaseInstruments(IPlugin):
         self.instruments.append(RectangleInstrument())
         self.instruments.append(FillInstrument())
 
-        mw = self.data_singleton.mainWindow
+        self.base_inst_tool_bar = self.mw.addToolBar(self.description())
+        self.base_inst_tool_bar.setObjectName(self.name())
+        self.base_inst_tool_bar.setToolButtonStyle(Qt.ToolButtonIconOnly)
 
-        base_inst_tool_bar = mw.addToolBar(self.description())
-        base_inst_tool_bar.setObjectName(self.name())
-        base_inst_tool_bar.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        self.base_inst_action_group = QActionGroup(self.base_inst_tool_bar)
+        self.base_inst_action_group.setExclusive(True)
+        self.base_inst_action_group.triggered.connect(lambda x: self.triggered_action_instrument(x))
 
-        mw.base_inst_action_group = QActionGroup(base_inst_tool_bar)
-        mw.base_inst_action_group.setExclusive(True)
-        mw.base_inst_action_group.triggered.connect(lambda x: self.triggered_action_instrument(x))
-
-        menu_instruments = mw.ui.menuInstruments
+        self.menu_instruments = self.mw.ui.menuInstruments
 
         for inst in self.instruments:
-            act = base_inst_tool_bar.addAction(inst.name())
+            act = self.base_inst_tool_bar.addAction(inst.name())
             # TODO: objectName вида <class 'baseinstruments.rectangleinstrument.RectangleInstrument'>
             # кажется неудобным, может другое значение составлять
             act.setObjectName(str(type(inst)))
@@ -64,13 +66,21 @@ class PluginBaseInstruments(IPlugin):
                 act.setIcon(inst.icon())
             act.setCheckable(True)
 
-            mw.base_inst_action_group.addAction(act)
-            menu_instruments.addActions(mw.base_inst_action_group.actions())
+            self.base_inst_action_group.addAction(act)
+            self.menu_instruments.addActions(self.base_inst_action_group.actions())
             self.data_singleton.action_inst_dict[act] = inst
 
     def destroy(self):
-        # TODO: поддержать
-        pass
+        self.instruments.clear()
+
+        self.mw.removeToolBar(self.base_inst_tool_bar)
+
+        # base_inst_tool_bar удалит и base_inst_action_group, и действия
+        self.base_inst_tool_bar.deleteLater()
+        self.base_inst_tool_bar = None
+        self.base_inst_action_group = None
+
+        self.data_singleton.action_inst_dict.clear()
 
     def triggered_action_instrument(self, action):
         instrument = self.data_singleton.action_inst_dict[action]
