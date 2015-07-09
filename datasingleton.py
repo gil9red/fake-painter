@@ -10,6 +10,7 @@ __author__ = 'ipetrash'
 
 from mainwindow import MainWindow
 # import json
+from PySide.QtCore import Qt
 
 
 class DataSingleton:
@@ -22,6 +23,9 @@ class DataSingleton:
         self.action_inst_dict = {}
         # self.instActionDict = {}
         self.action_filter_dict = {}
+
+        self.primary_color = Qt.black
+        self.secondary_color = Qt.white
 
         self.UNTITLED = 'Untitled'
         self.PROGRAM_NAME = 'fake-painter'

@@ -15,14 +15,14 @@ from PySide.QtCore import *
 class ColorChooserWidget(QLabel):
     """Widget for selecting color."""
 
-    def __init__(self, r, g, b):
+    def __init__(self, color):
         super().__init__()
 
         self.setFrameStyle(QFrame.Raised | QFrame.Box)
         self.setMargin(3)
         self.setAlignment(Qt.AlignHCenter)
 
-        self._current_color = QColor(r, g, b)
+        self._current_color = color
         self._pixmap = QPixmap(20, 20)
 
         self.set_color(self._current_color)
