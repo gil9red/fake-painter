@@ -110,15 +110,15 @@ class Canvas(QWidget):
     #
     # def print(self):
     #     pass
-
-    def resizeImage(self):
-        pass
-
-    def resizeCanvas(self):
-        pass
-
-    def rotateImage(self, flag):
-        pass
+    #
+    # def resizeImage(self):
+    #     pass
+    #
+    # def resizeCanvas(self):
+    #     pass
+    #
+    # def rotateImage(self, flag):
+    #     pass
 
     def get_file_name(self):
         if self.file_path is not None:
@@ -145,20 +145,20 @@ class Canvas(QWidget):
 
     edited = property(get_edited, set_edited)
 
-    def applyEffect(self, effect):
-        pass
-
+    # def applyEffect(self, effect):
+    #     pass
+    #
     def restoreCursor(self):
         pass
-
-    def zoomImage(self, factor):
-        pass
-
-    def setZoomFactor(self, factor):
-        pass
-
-    def getZoomFactor(self):
-        pass
+    #
+    # def zoomImage(self, factor):
+    #     pass
+    #
+    # def setZoomFactor(self, factor):
+    #     pass
+    #
+    # def getZoomFactor(self):
+    #     pass
 
     def getUndoStack(self):
         return self.mUndoStack
@@ -169,29 +169,29 @@ class Canvas(QWidget):
     def isPaint(self):
         return self.mIsPaint
 
-    def emitPrimaryColorView(self):
-        pass
-
-    def emitSecondaryColorView(self):
-        pass
-
-    def emitColor(self, color):
-        pass
-
-    def emitRestorePreviousInstrument(self):
-        pass
-
-    def copyImage(self):
-        pass
-
-    def pasteImage(self):
-        pass
-
-    def cutImage(self):
-        pass
-
-    def saveImageChanges(self):
-        pass
+    # def emitPrimaryColorView(self):
+    #     pass
+    #
+    # def emitSecondaryColorView(self):
+    #     pass
+    #
+    # def emitColor(self, color):
+    #     pass
+    #
+    # def emitRestorePreviousInstrument(self):
+    #     pass
+    #
+    # def copyImage(self):
+    #     pass
+    #
+    # def pasteImage(self):
+    #     pass
+    #
+    # def cutImage(self):
+    #     pass
+    #
+    # def saveImageChanges(self):
+    #     pass
 
     def clearSelection(self):
         pass
@@ -200,23 +200,23 @@ class Canvas(QWidget):
         if command:
             self.mUndoStack.push(command)
 
-    def initializeImage(self):
-        pass
-
-    def open(self):
-        pass
-
-    def open(self, filePath):
-        pass
-
-    def drawCursor(self):
-        pass
-
-    def makeFormatsFilters(self):
-        pass
-
-    def autoSave(self):
-        pass
+    # def initializeImage(self):
+    #     pass
+    #
+    # def open(self):
+    #     pass
+    #
+    # def open(self, filePath):
+    #     pass
+    #
+    # def drawCursor(self):
+    #     pass
+    #
+    # def makeFormatsFilters(self):
+    #     pass
+    #
+    # def autoSave(self):
+    #     pass
 
     def rect_bottom_right_corner(self):
         return QRect(self._image.rect().right(), self._image.rect().bottom(), 6, 6)
@@ -278,7 +278,9 @@ class Canvas(QWidget):
                 temp_image = QImage(width, height, QImage.Format_ARGB32_Premultiplied)
                 painter = QPainter(temp_image)
                 painter.setPen(Qt.NoPen)
-                painter.setBrush(QBrush(QPixmap("transparent.jpg")))
+                # TODO: поддержать
+                # painter.setBrush(QBrush(QPixmap("transparent.jpg")))
+                painter.setBrush(self.data_singleton.secondary_color)
                 painter.drawRect(QRect(0, 0, width, height))
                 painter.drawImage(0, 0, self._image)
                 painter.end()
@@ -319,12 +321,13 @@ class Canvas(QWidget):
         painter.setPen(Qt.NoPen)
 
         # TODO: иконки через ресурсы брать
-        painter.setBrush(QBrush(QPixmap("transparent.jpg")))
+        # TODO: поддержать
+        # painter.setBrush(QBrush(QPixmap("transparent.jpg")))
+        painter.setBrush(self.data_singleton.secondary_color)
         painter.drawRect(0, 0,
                          self._image.rect().right() - 1,
                          self._image.rect().bottom() - 1)
 
-        # painter.drawImage(event.rect(), self.image, event.rect())
         painter.drawImage(self._image.rect(), self._image)
 
         painter.setBrush(Qt.black)

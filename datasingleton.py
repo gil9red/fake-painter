@@ -10,13 +10,12 @@ __author__ = 'ipetrash'
 
 from mainwindow import MainWindow
 # import json
+from PySide.QtGui import QColor
 from PySide.QtCore import Qt
 
 
 class DataSingleton:
-    """
-    Singleton for variables needed for the program.
-    """
+    """Singleton for variables needed for the program."""
 
     def __init__(self):
         self.current_instrument = None
@@ -24,8 +23,8 @@ class DataSingleton:
         # self.instActionDict = {}
         self.action_filter_dict = {}
 
-        self.primary_color = Qt.black
-        self.secondary_color = Qt.white
+        self.primary_color = QColor(Qt.black)
+        self.secondary_color = QColor(Qt.white)
 
         self.UNTITLED = 'Untitled'
         self.PROGRAM_NAME = 'fake-painter'

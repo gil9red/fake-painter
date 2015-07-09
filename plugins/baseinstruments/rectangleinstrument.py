@@ -13,7 +13,6 @@ from PySide.QtGui import *
 from PySide.QtCore import *
 
 # TODO: rem import *
-# TODO: цвет2 -- это цвет ластика и цвет brush фигур
 
 
 class RectangleInstrument(AbstractInstrument):
@@ -58,7 +57,14 @@ class RectangleInstrument(AbstractInstrument):
 
     def paint(self, canvas, is_secondary_color=False, additional_flag=False):
         painter = QPainter(canvas.image)
+
         pen = QPen()
+
+        if is_secondary_color:
+            pen.setColor(self.data_singleton.secondary_color)
+        else:
+            pen.setColor(self.data_singleton.primary_color)
+
         # TODO: брать найстройки из класса-синглетона
         # pen.setWidth(DataSingleton::Instance()->getPenSize() * canvas.getZoomFactor())
         pen.setWidthF(2.0)
@@ -66,15 +72,12 @@ class RectangleInstrument(AbstractInstrument):
         pen.setCapStyle(Qt.RoundCap)
         pen.setJoinStyle(Qt.RoundJoin)
 
-        # TODO: проработать этот момент -- у rect'а может быть
-        # заливка каким-то цветом и нужно определить что будет закрашивать
-        # левый и правый клики -- Pen или Brush
-        if is_secondary_color:
-            pen.setBrush(self.data_singleton.secondary_color)
-        else:
-            pen.setBrush(self.data_singleton.primary_color)
-
         painter.setPen(pen)
+
+        if is_secondary_color:
+            painter.setBrush(self.data_singleton.primary_color)
+        else:
+            painter.setBrush(self.data_singleton.secondary_color)
 
         if self._start_point != self._end_point:
             painter.drawRect(QRect(self._start_point, self._end_point))

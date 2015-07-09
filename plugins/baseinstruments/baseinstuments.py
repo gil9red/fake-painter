@@ -40,7 +40,7 @@ class PluginBaseInstruments(IPlugin):
         return 'Base Instruments'
 
     def initialize(self):
-        self.instruments.append(EraserInstrument())
+        self.instruments.append(EraserInstrument(self.data_singleton))
         self.instruments.append(PencilInstrument(self.data_singleton))
         self.instruments.append(LineInstrument(self.data_singleton))
         self.instruments.append(RectangleInstrument(self.data_singleton))

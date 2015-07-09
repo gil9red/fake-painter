@@ -64,9 +64,6 @@ class LineInstrument(AbstractInstrument):
         pen.setCapStyle(Qt.RoundCap)
         pen.setJoinStyle(Qt.RoundJoin)
 
-        # TODO: проработать этот момент -- у rect'а может быть
-        # заливка каким-то цветом и нужно определить что будет закрашивать
-        # левый и правый клики -- Pen или Brush
         if is_secondary_color:
             pen.setBrush(self.data_singleton.secondary_color)
         else:
