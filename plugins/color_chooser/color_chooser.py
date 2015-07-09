@@ -13,6 +13,10 @@ from PySide.QtCore import *
 from iplugin import IPlugin
 from .color_chooser_widget import ColorChooserWidget
 
+# TODO: rem import *
+# TODO: tool tip: color1 -- карандаш, линии, линии фигур
+# TODO: tool tip: color2 -- ластик, brush фигур
+
 
 class PluginColorChooser(IPlugin):
     def __init__(self, data_singleton):
