@@ -19,7 +19,7 @@ from PySide.QtGui import *
 from PySide.QtCore import *
 
 # TODO: добавить автоматический поиск плагинов
-
+# TODO: rem import *
 
 class PluginBaseInstruments(IPlugin):
     def __init__(self, data_singleton):
@@ -41,10 +41,10 @@ class PluginBaseInstruments(IPlugin):
 
     def initialize(self):
         self.instruments.append(EraserInstrument())
-        self.instruments.append(PencilInstrument())
-        self.instruments.append(LineInstrument())
-        self.instruments.append(RectangleInstrument())
-        self.instruments.append(FillInstrument())
+        self.instruments.append(PencilInstrument(self.data_singleton))
+        self.instruments.append(LineInstrument(self.data_singleton))
+        self.instruments.append(RectangleInstrument(self.data_singleton))
+        self.instruments.append(FillInstrument(self.data_singleton))
 
         self.base_inst_tool_bar = self.mw.addToolBar(self.description())
         self.base_inst_tool_bar.setObjectName(self.name())
@@ -81,7 +81,6 @@ class PluginBaseInstruments(IPlugin):
         self.base_inst_action_group = None
 
         self.data_singleton.action_inst_dict.clear()
-
         self.data_singleton.current_instrument = None
 
     def triggered_action_instrument(self, action):

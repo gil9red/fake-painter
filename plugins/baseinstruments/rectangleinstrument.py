@@ -12,9 +12,13 @@ from abstractinstrument import AbstractInstrument
 from PySide.QtGui import *
 from PySide.QtCore import *
 
+# TODO: rem import *
+# TODO: цвет2 -- это цвет ластика и цвет brush фигур
+
 
 class RectangleInstrument(AbstractInstrument):
-    def __init__(self):
+    def __init__(self, data_singleton):
+        self.data_singleton = data_singleton
         self.__icon = QIcon('plugins/baseinstruments/icons/rectangle.png')
 
     def name(self):
@@ -66,11 +70,9 @@ class RectangleInstrument(AbstractInstrument):
         # заливка каким-то цветом и нужно определить что будет закрашивать
         # левый и правый клики -- Pen или Brush
         if is_secondary_color:
-            # pen.setBrush(DataSingleton::Instance()->getSecondaryColor())
-            pen.setBrush(Qt.white)
+            pen.setBrush(self.data_singleton.secondary_color)
         else:
-            # pen.setBrush(DataSingleton::Instance()->getPrimaryColor())
-            pen.setBrush(Qt.black)
+            pen.setBrush(self.data_singleton.primary_color)
 
         painter.setPen(pen)
 

@@ -12,9 +12,13 @@ from abstractinstrument import AbstractInstrument
 from PySide.QtGui import *
 from PySide.QtCore import *
 
+# TODO: rem import *
+# TODO: цвет2 -- это цвет ластика и цвет brush фигур
+
 
 class EraserInstrument(AbstractInstrument):
-    def __init__(self):
+    def __init__(self, data_singleton=None):
+        self.data_singleton = data_singleton
         self._icon = QIcon('plugins/baseinstruments/icons/lastic.png')
         # self._transparent = QColor(Qt.transparent).rgba()
 

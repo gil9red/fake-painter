@@ -11,9 +11,12 @@ from abstractinstrument import AbstractInstrument
 from PySide.QtCore import Qt
 from PySide.QtGui import *
 
+# TODO: rem import *
+
 
 class PencilInstrument(AbstractInstrument):
-    def __init__(self):
+    def __init__(self, data_singleton):
+        self.data_singleton = data_singleton
         self.__icon = QIcon('plugins/baseinstruments/icons/pencil.png')
 
     def name(self):
@@ -69,11 +72,9 @@ class PencilInstrument(AbstractInstrument):
         pen.setJoinStyle(Qt.RoundJoin)
 
         if is_secondary_color:
-            # pen.setBrush(DataSingleton::Instance()->getSecondaryColor())
-            pen.setBrush(Qt.white)
+            pen.setBrush(self.data_singleton.secondary_color)
         else:
-            # pen.setBrush(DataSingleton::Instance()->getPrimaryColor())
-            pen.setBrush(Qt.black)
+            pen.setBrush(self.data_singleton.primary_color)
 
         painter.setPen(pen)
 

@@ -12,9 +12,11 @@ from abstractinstrument import AbstractInstrument
 from PySide.QtGui import *
 from PySide.QtCore import *
 
+# TODO: rem import *
 
 class FillInstrument(AbstractInstrument):
-    def __init__(self):
+    def __init__(self, data_singleton):
+        self.data_singleton = data_singleton
         self._icon = QIcon('plugins/baseinstruments/icons/fill.png')
 
     def name(self):
@@ -50,13 +52,10 @@ class FillInstrument(AbstractInstrument):
             canvas.setIsPaint(False)
 
     def paint(self, canvas, is_secondary_color=False, additional_flag=False):
-        # TODO: настройки брать из синглетона
         if is_secondary_color:
-            # switch_color = DataSingleton::Instance()->getSecondaryColor()
-            switch_color = QColor(Qt.white)
+            switch_color = self.data_singleton.secondary_color
         else:
-            # switch_color = DataSingleton::Instance()->getPrimaryColor()
-            switch_color = QColor(Qt.black)
+            switch_color = self.data_singleton.primary_color
 
         # TODO: не заливает, если кликать на transparent фон
         x, y = self._start_point.x(), self._start_point.y()
