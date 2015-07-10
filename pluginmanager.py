@@ -33,6 +33,15 @@ class PluginManager(QDialog, QObject):
         plugin = self.model.get(index)
 
         # TODO: использовать шаблоны
+        # >>> from string import Template
+        # >>> tpl = Template("""${name} has ${amount}$$. {oh}""")
+        # >>> tpl.substitute({"amount": 100, "name": "John"})
+        # 'John has 100$. {oh}'
+        # >>> tpl.safe_substitute({"amount": 100})
+        # '${name} has 100$. {oh}'
+        # >>> # Для сравнения синтаксиса, метод format для строки:
+        # >>> """{name} has {amount}$. {{oh}}""".format(**{"amount": 100, "name": "John"})
+        # 'John has 100$. {oh}'
         text = plugin.name() + "\n" + plugin.version() + "\n" + plugin.description()
         self.ui.description.setText(text)
 
