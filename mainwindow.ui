@@ -111,7 +111,7 @@
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QToolBar" name="toolBar">
+  <widget class="QToolBar" name="generalToolBar">
    <property name="windowTitle">
     <string>toolBar</string>
    </property>

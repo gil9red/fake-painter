@@ -57,11 +57,14 @@ class PluginColorChooser(IPlugin):
         self._widget = QWidget()
         self._widget.setLayout(layout)
 
-        self.mw.ui.toolBar.addWidget(self._widget)
+        self.mw.ui.generalToolBar.addWidget(self._widget)
 
     def destroy(self):
-        # TODO: реализовать
-        pass
+        self._widget.deleteLater()
+        self._widget = None
+
+        self._primary_color_chooser = None
+        self._secondary_color_chooser = None
 
     def set_primary_color(self, color):
         self.data_singleton.primary_color = color

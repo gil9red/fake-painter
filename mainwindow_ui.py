@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Wed Jul  8 11:20:11 2015
+# Created: Fri Jul 10 18:35:49 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -49,9 +49,9 @@ class Ui_MainWindow(object):
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-        self.toolBar = QtGui.QToolBar(MainWindow)
-        self.toolBar.setObjectName("toolBar")
-        MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
+        self.generalToolBar = QtGui.QToolBar(MainWindow)
+        self.generalToolBar.setObjectName("generalToolBar")
+        MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.generalToolBar)
         self.actionNew = QtGui.QAction(MainWindow)
         self.actionNew.setObjectName("actionNew")
         self.actionOpen = QtGui.QAction(MainWindow)
@@ -100,11 +100,11 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuFilters.menuAction())
         self.menubar.addAction(self.menuTools.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
-        self.toolBar.addAction(self.actionNew)
-        self.toolBar.addAction(self.actionOpen)
-        self.toolBar.addSeparator()
-        self.toolBar.addAction(self.actionSave)
-        self.toolBar.addAction(self.actionSaveAs)
+        self.generalToolBar.addAction(self.actionNew)
+        self.generalToolBar.addAction(self.actionOpen)
+        self.generalToolBar.addSeparator()
+        self.generalToolBar.addAction(self.actionSave)
+        self.generalToolBar.addAction(self.actionSaveAs)
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(-1)
@@ -120,7 +120,7 @@ class Ui_MainWindow(object):
         self.menuInstruments.setTitle(QtGui.QApplication.translate("MainWindow", "Instruments", None, QtGui.QApplication.UnicodeUTF8))
         self.menuFilters.setTitle(QtGui.QApplication.translate("MainWindow", "Filters", None, QtGui.QApplication.UnicodeUTF8))
         self.menuTools.setTitle(QtGui.QApplication.translate("MainWindow", "Tools", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolBar.setWindowTitle(QtGui.QApplication.translate("MainWindow", "toolBar", None, QtGui.QApplication.UnicodeUTF8))
+        self.generalToolBar.setWindowTitle(QtGui.QApplication.translate("MainWindow", "toolBar", None, QtGui.QApplication.UnicodeUTF8))
         self.actionNew.setText(QtGui.QApplication.translate("MainWindow", "Новый", None, QtGui.QApplication.UnicodeUTF8))
         self.actionNew.setToolTip(QtGui.QApplication.translate("MainWindow", "Новый", None, QtGui.QApplication.UnicodeUTF8))
         self.actionNew.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+N", None, QtGui.QApplication.UnicodeUTF8))

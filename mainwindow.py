@@ -69,6 +69,7 @@ class MainWindow(QMainWindow, QObject):
         print('Plugins:')
         for plugin in loader.plugins():
             print('  ', plugin)
+        print()
 
     def update_states(self):
         if self.ui.tabWidget.count() == 0:
@@ -255,6 +256,8 @@ class MainWindow(QMainWindow, QObject):
             print(e)
 
     def write_settings(self):
+        # TODO: для ini есть модуль ConfigParser
+
         try:
             import json
             with open(self.data_singleton.settings_path, 'w') as f:
