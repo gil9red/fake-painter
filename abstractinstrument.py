@@ -11,8 +11,6 @@ from abc import ABCMeta, abstractproperty, abstractmethod
 from undocommand import UndoCommand
 
 
-# TODO: может и версию добавить?
-
 class AbstractInstrument(metaclass=ABCMeta):
     def __init__(self):
         self._start_point = None

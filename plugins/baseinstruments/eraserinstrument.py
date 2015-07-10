@@ -9,17 +9,13 @@ __author__ = 'ipetrash'
 
 
 from abstractinstrument import AbstractInstrument
-from PySide.QtGui import *
-from PySide.QtCore import *
-
-# TODO: rem import *
+from PySide.QtGui import QIcon
 
 
 class EraserInstrument(AbstractInstrument):
     def __init__(self, data_singleton):
         self.data_singleton = data_singleton
         self._icon = QIcon('plugins/baseinstruments/icons/lastic.png')
-        # self._transparent = QColor(Qt.transparent).rgba()
 
     def name(self):
         return 'Eraser Instrument'
@@ -54,11 +50,9 @@ class EraserInstrument(AbstractInstrument):
             canvas.setIsPaint(False)
 
     def paint(self, canvas, is_secondary_color=False, additional_flag=False):
-        # TODO: рефакторинг
         # TODO: поддержка разных размеров
         # TODO: поддержка очищения прозрачными пикселями
         x, y = self._start_point.x(), self._start_point.y()
-        # erase_color = QColor(canvas.background_color).rgba()
         erase_color = self.data_singleton.secondary_color.rgba()
 
         for i in range(-20, 20):
@@ -67,7 +61,6 @@ class EraserInstrument(AbstractInstrument):
                 check_y = canvas.image.height() > y + j >= 0
                 if check_x and check_y:
                     canvas.image.setPixel(x + i, y + j, erase_color)
-                    # canvas.image.setPixel(x + i, y + j, self._transparent)
 
         canvas.edited = True
         canvas.update()

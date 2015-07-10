@@ -137,14 +137,6 @@ class MainWindow(QMainWindow, QObject):
         if index == -1:
             return
 
-        # # TODO: проверить, мне кажется при этом слоте так и так
-        # # вкладка Index будет текущей
-        # self.ui.tabWidget.setCurrentIndex(index)
-
-        # TODO: реализовать
-        # QSize size = getCurrentImageArea()->getImage()->size();
-        # mSizeLabel->setText(QString("%1 x %2").arg(size.width()).arg(size.height()));
-
         canvas = self.get_current_canvas()
         self.mUndoStackGroup.setActiveStack(canvas.getUndoStack())
 
@@ -183,9 +175,10 @@ class MainWindow(QMainWindow, QObject):
         if file_name is None:
             file_name = os.path.join(QDir.homePath(), self.data_singleton.UNTITLED)
 
-        # TODO: суффикс по умолчанию -- png
+        default_filter = "{} ( *.{} )".format('PNG', 'png')
+
         # Получим путь к файлу
-        file_name = QFileDialog.getSaveFileName(self, None, file_name, '\n'.join(filters))[0]
+        file_name = QFileDialog.getSaveFileName(self, None, file_name, '\n'.join(filters), default_filter)[0]
         if file_name:
             try:
                 canvas.save(file_name)

@@ -9,10 +9,9 @@ __author__ = 'ipetrash'
 
 
 from abstractinstrument import AbstractInstrument
-from PySide.QtGui import *
-from PySide.QtCore import *
+from PySide.QtGui import QIcon, QColor
+from PySide.QtCore import Qt
 
-# TODO: rem import *
 
 class FillInstrument(AbstractInstrument):
     def __init__(self, data_singleton):

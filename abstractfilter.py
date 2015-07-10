@@ -12,8 +12,6 @@ from abc import ABCMeta, abstractproperty, abstractmethod
 from undocommand import UndoCommand
 
 
-# TODO: может и версию добавить?
-
 class AbstractFilter(metaclass=ABCMeta):
     """Abstract class for implementing filters."""
 

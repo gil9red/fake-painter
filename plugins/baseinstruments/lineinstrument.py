@@ -9,10 +9,8 @@ __author__ = 'ipetrash'
 
 
 from abstractinstrument import AbstractInstrument
-from PySide.QtGui import *
-from PySide.QtCore import *
-
-# TODO: rem import *
+from PySide.QtGui import QIcon, QPainter, QPen
+from PySide.QtCore import Qt
 
 
 class LineInstrument(AbstractInstrument):
@@ -56,6 +54,8 @@ class LineInstrument(AbstractInstrument):
 
     def paint(self, canvas, is_secondary_color=False, additional_flag=False):
         painter = QPainter(canvas.image)
+        painter.setRenderHint(QPainter.Antialiasing)
+
         pen = QPen()
         # TODO: брать найстройки из класса-синглетона
         # pen.setWidth(DataSingleton::Instance()->getPenSize() * canvas.getZoomFactor())

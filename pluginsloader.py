@@ -83,7 +83,6 @@ class PluginsLoader:
     #     # что не попали в "черный список"
     #     self._enable_disabled_plugins(self.data_singleton.disabled_plugins)
 
-    # TODO: проверять после закрытия диалога pluginmanager
     def disable_enabled_plugins(self, disable_list):
         """Отключить загруженные плагины, попавшие в "черный список" (disableList)"""
 
@@ -95,7 +94,6 @@ class PluginsLoader:
 
                 self._disabled_plugins[plugin.name()] = plugin
 
-    # TODO: проверять после закрытия диалога pluginmanager
     def enable_disabled_plugins(self, enabled_list):
         """Включить отключенные плагины, если их больше нет в "черном списке"""
 
@@ -152,42 +150,12 @@ class PluginsLoader:
             # TODO: если проверять на файл, то можно импортировать одиночные модули
             # Проверить, что это директория
             if os.path.isdir(package_path):
-                # Список строк, описывающий возникшие ошибки во время импортирования
-                # Выводятся только если не удалось импортировать ни одного модуля
-                errors = []
-
-                # Количество загруженных плагинов до импорта нового
-                # old_plugins_count = len(self._plugins) + len(self._disabled_plugins)
-                old_plugins_count = len(self._plugins)
-
                 # Переберем все файлы внутри packagePath
                 # и попытаемся их импортировать
                 for fileName in sorted(os.listdir(package_path)):
                     module = self._import_single_module(packageName, fileName)
                     if module is not None:
                         self._load_plugin(module)
-
-                    # try:
-                    #     module = self._import_single_module(packageName, fileName)
-                    #     print('module=', module) # TODO: rem
-                    #     if module is not None:
-                    #         self.__load_plugin(module)
-                    # except BaseException as e:
-                    #     errors.append("*** Plugin {package} loading error ***\n"
-                    #                   "{package}/{fileName}\n"
-                    #                   "{error}".format(package=packageName,
-                    #                                    fileName=fileName,
-                    #                                    error=str(e)))
-
-                # Проверим, удалось ли загрузить плагин
-                # new_plugins_count = len(self._plugins) + len(self._disabled_plugins)
-                new_plugins_count = len(self._plugins)
-
-                # Вывод ошибок, если ни одного плагина из пакета не удалось
-                # импортировать
-                if new_plugins_count == old_plugins_count and len(errors) != 0:
-                    self._print(u"\n\n".join(errors))
-                    self._print(u"**********\n")
 
     @staticmethod
     def _import_single_module(package_name, file_name):

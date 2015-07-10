@@ -8,10 +8,8 @@
 __author__ = 'ipetrash'
 
 from abstractinstrument import AbstractInstrument
+from PySide.QtGui import QIcon, QPainter, QPen
 from PySide.QtCore import Qt
-from PySide.QtGui import *
-
-# TODO: rem import *
 
 
 class PencilInstrument(AbstractInstrument):

@@ -15,11 +15,11 @@ from .rectangleinstrument import RectangleInstrument
 from .eraserinstrument import EraserInstrument
 from .fillinstrument import FillInstrument
 
-from PySide.QtGui import *
-from PySide.QtCore import *
+from PySide.QtGui import QActionGroup
+from PySide.QtCore import Qt
 
 # TODO: добавить автоматический поиск плагинов
-# TODO: rem import *
+
 
 class PluginBaseInstruments(IPlugin):
     def __init__(self, data_singleton):

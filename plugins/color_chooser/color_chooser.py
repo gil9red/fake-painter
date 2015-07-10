@@ -8,12 +8,10 @@
 __author__ = 'ipetrash'
 
 
-from PySide.QtGui import *
-from PySide.QtCore import *
+from PySide.QtGui import QWidget, QHBoxLayout
 from iplugin import IPlugin
 from .color_chooser_widget import ColorChooserWidget
 
-# TODO: rem import *
 # TODO: tool tip: color1 -- карандаш, линии, линии фигур
 # TODO: tool tip: color2 -- ластик, brush фигур
 

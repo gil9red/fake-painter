@@ -29,7 +29,6 @@ class SwapRGBFilter(AbstractFilter):
         if canvas is None:
             return
 
-        # TODO: логировать
         # TODO: реализовать
         # canvas.clearSelection();
         self.make_undo_command(canvas)
