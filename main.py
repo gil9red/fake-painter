@@ -21,10 +21,6 @@ import sys
 # pylint *.py
 
 
-# TODO: генерация формы / файла ресурсов
-# pyside-uic -o widget.py widget.ui
-# pyside-rcc -o resource_rc.py resource.qrc
-
 # TODO: избавиться от import * -- много лишнего импортируется
 
 # TODO: плагин, добавляющий контекстное меню на вкладки, в котором есть

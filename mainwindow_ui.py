@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Fri Jul 10 18:35:49 2015
+# Created: Sun Jul 12 02:43:14 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(686, 548)
+        MainWindow.resize(684, 548)
         MainWindow.setWindowTitle("")
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.tabWidget)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 686, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 684, 21))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -53,14 +53,29 @@ class Ui_MainWindow(object):
         self.generalToolBar.setObjectName("generalToolBar")
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.generalToolBar)
         self.actionNew = QtGui.QAction(MainWindow)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/icons/document-image.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionNew.setIcon(icon)
         self.actionNew.setObjectName("actionNew")
         self.actionOpen = QtGui.QAction(MainWindow)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/icons/open.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionOpen.setIcon(icon1)
         self.actionOpen.setObjectName("actionOpen")
         self.actionSave = QtGui.QAction(MainWindow)
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(":/icons/save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionSave.setIcon(icon2)
         self.actionSave.setObjectName("actionSave")
         self.actionSaveAs = QtGui.QAction(MainWindow)
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap(":/icons/saveas.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionSaveAs.setIcon(icon3)
         self.actionSaveAs.setObjectName("actionSaveAs")
         self.actionQuit = QtGui.QAction(MainWindow)
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap(":/icons/door--arrow.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionQuit.setIcon(icon4)
         self.actionQuit.setObjectName("actionQuit")
         self.actionUndo = QtGui.QAction(MainWindow)
         self.actionUndo.setObjectName("actionUndo")
@@ -120,7 +135,7 @@ class Ui_MainWindow(object):
         self.menuInstruments.setTitle(QtGui.QApplication.translate("MainWindow", "Instruments", None, QtGui.QApplication.UnicodeUTF8))
         self.menuFilters.setTitle(QtGui.QApplication.translate("MainWindow", "Filters", None, QtGui.QApplication.UnicodeUTF8))
         self.menuTools.setTitle(QtGui.QApplication.translate("MainWindow", "Tools", None, QtGui.QApplication.UnicodeUTF8))
-        self.generalToolBar.setWindowTitle(QtGui.QApplication.translate("MainWindow", "toolBar", None, QtGui.QApplication.UnicodeUTF8))
+        self.generalToolBar.setWindowTitle(QtGui.QApplication.translate("MainWindow", "General", None, QtGui.QApplication.UnicodeUTF8))
         self.actionNew.setText(QtGui.QApplication.translate("MainWindow", "Новый", None, QtGui.QApplication.UnicodeUTF8))
         self.actionNew.setToolTip(QtGui.QApplication.translate("MainWindow", "Новый", None, QtGui.QApplication.UnicodeUTF8))
         self.actionNew.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+N", None, QtGui.QApplication.UnicodeUTF8))
@@ -154,3 +169,4 @@ class Ui_MainWindow(object):
         self.actionSettings.setText(QtGui.QApplication.translate("MainWindow", "Settings", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPlugin_Manager.setText(QtGui.QApplication.translate("MainWindow", "Plugin Manager", None, QtGui.QApplication.UnicodeUTF8))
 
+import resource_rc
