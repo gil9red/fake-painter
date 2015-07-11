@@ -23,6 +23,8 @@ class DataSingleton:
         # self.instActionDict = {}
         self.action_filter_dict = {}
 
+        self.pen_size = 2
+
         self.primary_color = QColor(Qt.black)
         self.secondary_color = QColor(Qt.white)
 

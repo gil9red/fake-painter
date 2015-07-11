@@ -54,9 +54,6 @@ class RectangleInstrument(AbstractInstrument):
             canvas.setIsPaint(False)
 
     def paint(self, canvas, is_secondary_color=False, additional_flag=False):
-        painter = QPainter(canvas.image)
-        painter.setRenderHint(QPainter.Antialiasing)
-
         pen = QPen()
 
         if is_secondary_color:
@@ -64,9 +61,9 @@ class RectangleInstrument(AbstractInstrument):
         else:
             pen.setColor(self.data_singleton.primary_color)
 
-        # TODO: брать найстройки из класса-синглетона
-        # pen.setWidth(DataSingleton::Instance()->getPenSize() * canvas.getZoomFactor())
-        pen.setWidthF(2.0)
+        painter = QPainter(canvas.image)
+        painter.setRenderHint(QPainter.Antialiasing)
+        pen.setWidth(self.data_singleton.pen_size)
         pen.setStyle(Qt.SolidLine)
         pen.setCapStyle(Qt.RoundCap)
         pen.setJoinStyle(Qt.RoundJoin)
