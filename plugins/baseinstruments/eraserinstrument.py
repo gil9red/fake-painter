@@ -55,8 +55,10 @@ class EraserInstrument(AbstractInstrument):
         x, y = self._start_point.x(), self._start_point.y()
         erase_color = self.data_singleton.secondary_color.rgba()
 
-        for i in range(-20, 20):
-            for j in range(-20, 20):
+        size = self.data_singleton.pen_size
+
+        for i in range(-size, size):
+            for j in range(-size, size):
                 check_x = canvas.image.width() > x + i >= 0
                 check_y = canvas.image.height() > y + j >= 0
                 if check_x and check_y:

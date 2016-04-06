@@ -53,13 +53,8 @@ class LineInstrument(AbstractInstrument):
             canvas.setIsPaint(False)
 
     def paint(self, canvas, is_secondary_color=False, additional_flag=False):
-        painter = QPainter(canvas.image)
-        painter.setRenderHint(QPainter.Antialiasing)
-
         pen = QPen()
-        # TODO: брать найстройки из класса-синглетона
-        # pen.setWidth(DataSingleton::Instance()->getPenSize() * canvas.getZoomFactor())
-        pen.setWidthF(2.0)
+        pen.setWidth(self.data_singleton.pen_size)
         pen.setStyle(Qt.SolidLine)
         pen.setCapStyle(Qt.RoundCap)
         pen.setJoinStyle(Qt.RoundJoin)
@@ -69,6 +64,8 @@ class LineInstrument(AbstractInstrument):
         else:
             pen.setBrush(self.data_singleton.primary_color)
 
+        painter = QPainter(canvas.image)
+        painter.setRenderHint(QPainter.Antialiasing)
         painter.setPen(pen)
         painter.drawLine(self._start_point, self._end_point)
 
