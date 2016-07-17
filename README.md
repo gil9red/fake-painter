@@ -12,4 +12,4 @@ fake-painter распространяется с исходными текста
 
 
 ##### Скриншот:
-![](https://raw.githubusercontent.com/gil9red/fake-painter/master/screenshot.png)
+![](screenshot.png)
